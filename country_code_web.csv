@@ -1,0 +1,249 @@
+﻿Country,ISO ALPHA-3 code,Territory,Sovereignty
+Afghanistan,AFG,N,
+Åland Islands,ALA,Y,Finland
+Albania,ALB,N,
+Algeria,DZA,N,
+American Samoa,ASM,Y,United States
+Andorra,AND,N,
+Angola,AGO,N,
+Anguilla,AIA,N,
+Antarctica,ATA,Y,Varies
+Antigua and Barbuda,ATG,N,
+Argentina,ARG,N,
+Armenia,ARM,N,
+Aruba,ABW,Y,Netherlands
+Australia,AUS,N,
+Austria,AUT,N,
+Azerbaijan,AZE,N,
+Bahamas,BHS,N,
+Bahrain,BHR,N,
+Bangladesh,BGD,N,
+Barbados,BRB,N,
+Belarus,BLR,N,
+Belgium,BEL,N,
+Belize,BLZ,N,
+Benin,BEN,N,
+Bermuda,BMU,Y,United Kingdom
+Bhutan,BTN,N,
+Bolivia,BOL,N,
+"Bonaire, Sint Eustatius, Saba",BES,Y,Netherlands
+Bosnia and Herzegovina,BIH,N,
+Botswana,BWA,N,
+Bouvet Island,BVT,Y,Norway
+Brazil,BRA,N,
+British Indian Ocean Territory,IOT,Y,United Kingdom
+British Virgin Islands,VGB,Y,United Kingdom
+Brunei Darussalam,BRN,N,
+Bulgaria,BGR,N,
+Burkina Faso,BFA,N,
+Burundi,BDI,N,
+Cambodia,KHM,N,
+Cameroon,CMR,N,
+Canada,CAN,N,
+Cape Verde,CPV,N,
+Cayman Islands,CYM,Y,United Kingdom
+Central African Republic,CAF,N,
+Chad,TCD,N,
+Chile,CHL,N,
+China,CHN,N,
+Hong Kong Special Administrative Region of China,HKG,Y,China
+Macao Special Administrative Region of China,MAC,Y,China
+Christmas Island,CXR,Y,Australia
+Cocos (Keeling) Islands,CCK,Y,Australia
+Colombia,COL,N,
+Comoros,COM,N,
+Congo,COG,N,
+Cook Islands,COK,Y,New Zealand
+Costa Rica,CRI,N,
+Cote d'Ivoire,CIV,N,
+Croatia,HRV,N,
+Cuba,CUB,N,
+Curacao,CUW,Y,Netherlands
+Cyprus,CYP,N,
+Czech Republic,CZE,N,
+"Korea, The Democratic People's Republic Of",PRK,N,
+"Congo, The Democratic Republic Of",COD,N,
+Denmark,DNK,N,
+Djibouti,DJI,N,
+Dominica,DMA,N,
+Dominican Republic,DOM,N,
+Ecuador,ECU,N,
+Egypt,EGY,N,
+El Salvador,SLV,N,
+Equatorial Guinea,GNQ,N,
+Eritrea,ERI,N,
+Estonia,EST,N,
+Eswatini,SWZ,N,
+Ethiopia,ETH,N,
+Faroe Islands,FRO,Y,Denmark
+Falkland Islands (Malvinas),FLK,Y,United Kingdom
+Fiji,FJI,N,
+Finland,FIN,N,
+France,FRA,N,
+French Guiana,GUF,Y,France
+French Polynesia,PYF,Y,France
+French Southern Territories,ATF,Y,France
+Gabon,GAB,N,
+Gambia,GMB,N,
+Georgia,GEO,N,
+Germany,DEU,N,
+Ghana,GHA,N,
+Gibraltar,GIB,Y,United Kingdom
+Greece,GRC,N,
+Greenland,GRL,Y,Denmark
+Grenada,GRD,N,
+Guadeloupe,GLP,Y,France
+Guam,GUM,Y,United States
+Guatemala,GTM,N,
+Guernsey,GGY,Y,United Kingdom
+Guinea,GIN,N,
+Guinea-Bissau,GNB,N,
+Guyana,GUY,N,
+Heard Island and McDonald Islands,HMD,Y,Australia
+Haiti,HTI,N,
+Holy See,VAT,N,
+Honduras,HND,N,
+Hungary,HUN,N,
+Iceland,ISL,N,
+India,IND,N,
+Indonesia,IDN,N,
+"Iran, Islamic Republic of",IRN,N,
+Iraq,IRQ,N,
+Ireland,IRL,N,
+Isle of Man,IMN,Y,United Kingdom
+Israel,ISR,N,
+Italy,ITA,N,
+Jamaica,JAM,N,
+Japan,JPN,N,
+Jersey,JEY,Y,United Kingdom
+Jordan,JOR,N,
+Kazakhstan,KAZ,N,
+Kenya,KEN,N,
+Kiribati,KIR,N,
+Kuwait,KWT,N,
+Kyrgyzstan,KGZ,N,
+Lao People's Democratic Republic,LAO,N,
+Latvia,LVA,N,
+Lebanon,LBN,N,
+Lesotho,LSO,N,
+Liberia,LBR,N,
+Libya,LBY,N,
+Liechtenstein,LIE,N,
+Lithuania,LTU,N,
+Luxembourg,LUX,N,
+Madagascar,MDG,N,
+Malawi,MWI,N,
+Malaysia,MYS,N,
+Maldives,MDV,N,
+Mali,MLI,N,
+Malta,MLT,N,
+Marshall Islands,MHL,N,
+Martinique,MTQ,Y,France
+Mauritania,MRT,N,
+Mauritius,MUS,N,
+Mayotte,MYT,Y,France
+Mexico,MEX,N,
+"Micronesia, Federated States of",FSM,N,
+Moldova,MDA,N,
+Monaco,MCO,N,
+Mongolia,MNG,N,
+Montenegro,MNE,N,
+Montserrat,MSR,Y,United Kingdom
+Morocco,MAR,N,
+Mozambique,MOZ,N,
+Myanmar,MMR,N,
+Namibia,NAM,N,
+Nauru,NRU,N,
+Nepal,NPL,N,
+Netherlands,NLD,N,
+New Caledonia,NCL,Y,France
+New Zealand,NZL,N,
+Nicaragua,NIC,N,
+Niger,NER,N,
+Nigeria,NGA,N,
+Niue,NIU,Y,New Zealand
+Norfolk Island,NFK,Y,Australia
+Northern Mariana Islands,MNP,Y,United States
+Norway,NOR,N,
+"Palestine, State of",PSE,N,
+Oman,OMN,N,
+Pakistan,PAK,N,
+Palau,PLW,N,
+Panama,PAN,N,
+Papua New Guinea,PNG,N,
+Paraguay,PRY,N,
+Peru,PER,N,
+Philippines,PHL,N,
+Pitcairn,PCN,Y,United Kingdom
+Poland,POL,N,
+Portugal,PRT,N,
+Puerto Rico,PRI,Y,United States
+Qatar,QAT,N,
+Republic of Korea,KOR,N,
+Reunion,REU,Y,France
+Romania,ROU,N,
+Russian Federation,RUS,N,
+Rwanda,RWA,N,
+Saint-Barthélemy,BLM,Y,France
+"Saint Helena, Ascension, Tristan de Cunha",SHN,Y,United Kingdom
+Saint Kitts and Nevis,KNA,N,
+Saint Lucia,LCA,N,
+Saint-Martin (French part),MAF,Y,France
+Saint Pierre and Miquelon,SPM,Y,France
+Saint Vincent and the Grenadines,VCT,N,
+Samoa,WSM,N,
+San Marino,SMR,N,
+Sao Tome and Principe,STP,N,
+Saudi Arabia,SAU,N,
+Senegal,SEN,N,
+Serbia,SRB,N,
+Seychelles,SYC,N,
+Sierra Leone,SLE,N,
+Singapore,SGP,N,
+Sint Maarten,SXM,Y,Netherlands
+Slovakia,SVK,N,
+Slovenia,SVN,N,
+Solomon Islands,SLB,N,
+Somalia,SOM,N,
+South Africa,ZAF,N,
+South Georgia and the South Sandwich Islands,SGS,Y,United Kingdom
+Spain,ESP,N,
+Sri Lanka,LKA,N,
+Sudan,SDN,N,
+Suriname,SUR,N,
+Svalbard and Jan Mayen Islands,SJM,Y,Norway
+Sweden,SWE,N,
+Switzerland,CHE,N,
+Syrian Arab Republic,SYR,N,
+"Taiwan, Province of China",TWN,D,China
+Tajikistan,TJK,N,
+Thailand,THA,N,
+North Macedonia,MKD,N,
+Timor-Leste,TLS,N,
+Togo,TGO,N,
+Tokelau,TKL,Y,New Zealand
+Tonga,TON,N,
+Trinidad and Tobago,TTO,N,
+Tunisia,TUN,N,
+Turkey,TUR,N,
+Turkmenistan,TKM,N,
+Turks and Caicos Islands,TCA,Y,United Kingdom
+Tuvalu,TUV,N,
+Uganda,UGA,N,
+Ukraine,UKR,N,
+United Arab Emirates,ARE,N,
+United Kingdom,GBR,N,
+"Tanzania, United Republic Of",TZA,N,
+United States,USA,N,
+United States Minor Outlying Islands,UMI,Y,United States
+United States Virgin Islands,VIR,Y,United States
+Uruguay,URY,N,
+Uzbekistan,UZB,N,
+Vanuatu,VUT,N,
+Venezuela,VEN,N,
+Viet Nam,VNM,N,
+Wallis and Futuna Islands,WLF,Y,France
+Western Sahara,ESH,D,
+Yemen,YEM,N,
+Zambia,ZMB,N,
+Zimbabwe,ZWE,N,
