@@ -15,134 +15,11 @@ library(mapproj)
 library(viridis)
 library(scales)
 library(cowplot)
+library(forcats)
+library(ggpubr)
 
-##  Preparing dataset
-data <- read.csv("coralreef_gender_cleaned_final_2020.csv",header=TRUE)
-data <- data %>% filter(is.na(Excluded)) %>% distinct()
-data <- filter(data,!is.na(Pub_year))
-
-##Coding first and last authors
-id <- unique(data$Article.ID)
-x <- c(1:n_distinct(data$Article.ID))
-first_last <- data.frame(Article.ID=integer(),Author_order=integer(),First_last=character())
-
-dat <- data %>% select(Article.ID, Author_order) %>% distinct()
-
-for (i in x){
-  y <- id[i]
-  sub <- dat %>% filter(Article.ID == y) %>% distinct()
-  z <- c(1:nrow(sub))
-  l <- max(sub$Author_order)
-  if(length(z) == 1){
-    sub[1,3] <- c("single")
-  } else {
-    for(i in z){
-      if (sub[i,2] == 1) {
-        sub[i,3] <- c("first")
-      } else if (sub[i,2] == l) {
-        sub[i,3] <- c("last")
-      } else {
-        sub[i,3] <- c("other")
-      }
-    }
-  }
-  first_last <- rbind(first_last,sub)
-}
-
-colnames(first_last) <- c("Article.ID","Author_order","First_last")
-
-df <- left_join(data,first_last,by=c("Article.ID","Author_order"))
-df$Study.Country <- as.character(df$Study.Country)
-
-#Separating out countries for stats and mapping
-df_c <- select(df, Article.ID, Study.Country) %>% distinct()
-df_c <- df_c %>% filter(!is.na(Study.Country)) %>% distinct()
-
-#Fix syntax and delimiter between countries, fixing mispellings and typos
-df_c$Study.Country <- gsub(', ',',',df_c$Study.Country)
-df_c$Study.Country <- gsub('Congo,The Democratic Republic Of The','Congo, The Democratic Republic Of',df_c$Study.Country)
-df_c$Study.Country <- gsub('Congo,The Democratic Republic Of','Congo, The Democratic Republic Of',df_c$Study.Country)
-df_c$Study.Country <- gsub('Iran,Islamic Republic Of','Iran, Islamic Republic Of',df_c$Study.Country)
-df_c$Study.Country <- gsub('Korea,South','Republic of Korea',df_c$Study.Country)
-df_c$Study.Country <- gsub('Korea,North',"Korea, The Democratic People's Republic Of",df_c$Study.Country)
-df_c$Study.Country <- gsub('Micronesia,Federated States of','Micronesia, Federated States of',df_c$Study.Country)
-df_c$Study.Country <- gsub('Taiwan,Province Of China','Taiwan, Province Of China',df_c$Study.Country)
-df_c$Study.Country <- gsub('Tanzania,United Republic Of','Tanzania, United Republic Of',df_c$Study.Country)
-df_c$Study.Country <- gsub(' US Virgin Islands','United States Virgin Islands',df_c$Study.Country)
-df_c$Study.Country <- gsub('US Virgin Isands','United States Virgin Islands',df_c$Study.Country)
-df_c$Study.Country <- gsub('US Virgin Islands','United States Virgin Islands',df_c$Study.Country)
-df_c$Study.Country <- gsub('USA','United States',df_c$Study.Country)
-df_c$Study.Country <- gsub(' Northern Mariana Islands','Northern Mariana Islands',df_c$Study.Country)
-df_c$Study.Country <- gsub('Brazil ','Brazil',df_c$Study.Country)
-df_c$Study.Country <- gsub('Cook Ilsands','Cook Islands',df_c$Study.Country)
-df_c$Study.Country <- gsub("DRC", "Congo, The Democratic Republic Of", df_c$Study.Country)
-df_c$Study.Country <- gsub("HI", "United States", df_c$Study.Country)
-df_c$Study.Country <- gsub("imor Leste", "Timor-Leste", df_c$Study.Country)
-df_c$Study.Country <- gsub("Chagos Archipelago","Chagos", df_c$Study.Country)
-df_c$Study.Country <- gsub("New Calednoia","New Caledonia", df_c$Study.Country)
-df_c$Study.Country <- gsub("Phillipines","Philippines", df_c$Study.Country)
-df_c$Study.Country <- gsub("Pitcairn Islands","Pitcairn", df_c$Study.Country)
-df_c$Study.Country <- gsub("St. Vincent","Saint Vincent", df_c$Study.Country)
-df_c$Study.Country <- gsub("Saudia Arabia","Saudi Arabia", df_c$Study.Country)
-df_c$Study.Country <- gsub("Saint Vincent And The Grenadines","Saint Vincent and the Grenadines", df_c$Study.Country)
-
-df_c$Study.Country <- gsub('(\\w),(\\w)','\\1;\\2',df_c$Study.Country)
-
-#Splitting countries out onto separate lines
-c <- strsplit(df_c$Study.Country, split=";")
-dataframe <- data.frame(ID=rep(df_c$Article.ID, sapply(c, length)), Study.Country = unlist(c))
-colnames(dataframe) <- c("Article.ID","Study_Country")
-dataframe <- distinct(dataframe)
-
-#Add new column to dataframe
-df2 <- left_join(df,dataframe,by="Article.ID") 
-
-country.names <- df2 %>% select(Study_Country) %>% distinct() %>% filter(Study_Country != "") %>% filter(!is.na(Study_Country)) %>% distinct()  %>% arrange(Study_Country)
-
-#Fixing regional/global
-df2$Study_Country <- gsub('Global',NA,df2$Study_Country)
-df2$Study_Country <- gsub('ABNJ',NA,df2$Study_Country)
-
-#Creating new column for mapping purposes (territories without ISO 3166 codes are mapping under territory holder code), adjusting names to official "mapping" names
-df2$Mapping_Country <- df2$Study_Country
-df2$Mapping_Country <- gsub('Andaman and Nicobar','India',df2$Mapping_Country)
-df2$Mapping_Country <- gsub('Venezuela','Venezuela (Bolivarian Republic of)',df2$Mapping_Country)
-df2$Mapping_Country <- gsub('Wake Atoll','United States Minor Outlying Islands',df2$Mapping_Country)
-df2$Mapping_Country <- gsub('Swaziland','Eswatini',df2$Mapping_Country)
-df2$Mapping_Country <- gsub('Palmyra','United States Minor Outlying Islands',df2$Mapping_Country)
-df2$Mapping_Country <- gsub('Chagos Archipelago','British Indian Ocean Territory',df2$Mapping_Country)
-df2$Mapping_Country <- gsub('Saba','Bonaire, Sint Eustatius, Saba',df2$Mapping_Country)
-df2$Mapping_Country <- gsub('Bonaire','Bonaire, Sint Eustatius, Saba',df2$Mapping_Country)
-df2$Mapping_Country <- gsub('Scotland','United Kingdom',df2$Mapping_Country)
-df2$Mapping_Country <- gsub('Corsica (France)','France',df2$Mapping_Country)
-df2$Mapping_Country <- gsub('Clipperton Atoll','United Kingdom',df2$Mapping_Country)
-
-#Fixing study_type syntax
-df_s <- select(df2, Article.ID, Laboratory) %>% distinct()
-df_s <- df_s %>% filter(!is.na(Laboratory)) %>% distinct()
-
-#Fix syntax and delimiter between countries, fixing mispellings and typos
-df_s$Laboratory <- gsub(', ',',',df_s$Laboratory)
-df_s$Laboratory <- gsub(',',';',df_s$Laboratory)
-df_s$Laboratory <- gsub('; ',';',df_s$Laboratory)
-df_s$Laboratory <- gsub('; ',';',df_s$Laboratory)
-df_s$Laboratory <- gsub('Desk Studies','Desk studies',df_s$Laboratory)
-df_s$Laboratory <- gsub('Field-based;Synthesis Modelling','Field-based;Synthesis;Modelling',df_s$Laboratory)
-df_s$Laboratory <- gsub('Modeling','Modelling',df_s$Laboratory)
-df_s$Laboratory[df_s$Laboratory == "Correspondence"] <- c("Editorials/Correspondence")
-df_s$Laboratory[df_s$Laboratory == "Editorials"] <- c("Editorials/Correspondence")
-df_s$Laboratory[df_s$Laboratory == ""] <- c("Undetermined")
-
-#Splitting countries out onto separate lines
-s <- strsplit(df_s$Laboratory, split=";")
-dataframe_s <- data.frame(ID=rep(df_s$Article.ID, sapply(s, length)), Study_Type = unlist(s))
-colnames(dataframe_s) <- c("Article.ID","Study_Type")
-dataframe_s <- distinct(dataframe_s)
-
-#Add new column to dataframe
-df2 <- left_join(df2,dataframe_s,by="Article.ID") 
-
-colnames(df2) <- c("Done","Excluded","Reviewer","Article.ID","Author","Author_gender","Country_affiliation","Title","Keywords","Abstract","Study.Country","Territory.disputed","Study_region","Study_type","Marine_realm","Author.Based.In.Country","Author.Based.In.Sovereign","Times.Cited","DOI","Affiliation","Journal","Author_order","Pub_year","First_last","Study_Country","Mapping_Country","Study_Type")
+#Read in data
+df2 <- readRDS("final_data_for_analysis_01302020.rds")
 
 ##Summary statistics
 n <- n_distinct(df2$Article.ID)
@@ -266,15 +143,6 @@ map_lyr <- readOGR(
 
 ggmap <- tidy(map_lyr,region="ISO3")
 
-#Clean marine realm data
-realm <- df2 %>% select(Article.ID,Marine_realm) %>% distinct() %>% filter(Marine_realm != "")
-realm$Marine_realm <- gsub(", ",",", realm$Marine_realm)
-realm$Marine_realm <- as.character(realm$Marine_realm)
-m <- strsplit(realm$Marine_realm, split=",")
-m_df <- data.frame(ID=rep(realm$Article.ID, sapply(m, length)), id = unlist(m))
-colnames(m_df) <- c("Article.ID","id")
-m_df <- distinct(m_df)
-
 #Count studies per realm
 marine_count <- count(m_df,id)
 marine_count$id <- as.character(as.factor(marine_count$id))
@@ -350,50 +218,19 @@ wordcloud(words = wc$word, freq = wc$freq, min.freq = 10,
           colors=brewer.pal(8, "Dark2"), scale=c(2.5,0.25))
 
 ##Characteristics of authors
-##Cleaning data
-gender <- df2 %>% select(-Done,-Excluded,-Reviewer,-Title,-Keywords,-Abstract,-DOI,-Affiliation,-Study_type,-Study.Country) %>% distinct()
-gender$Author_gender <- gsub("FEmale","Female",gender$Author_gender)
-gender$Author_gender <- gsub("Female ","Female",gender$Author_gender)
-gender$Author_gender <- gsub("Male ","Male",gender$Author_gender)
 
-#Assuming that unknown code implies undetermined
-gender$Author_gender[gender$Author_gender == "Unknown"] <- "Undetermined"
-gender$Author_gender[gender$Author_gender == ""] <- "Undetermined"
-gender$Author_gender[is.na(gender$Author_gender)] <- "Undetermined"
-
-#Percent authors successfully identified and summary stats
+##Overall gender composition in author pool
+#Percent authors successfully identified
 authors <- gender %>% select(Author_gender,Author) %>% distinct()
-
 n_a <- n_distinct(authors$Author)
 gender_stats <- count(authors,Author_gender)
+gs_plot <- filter(gender_stats,Author_gender != "Not found")
 
 #Checking where undetermined authors are from (potential country bias)
-gender_undet <- gender %>% filter(Author_gender == "Undetermined" | Author_gender == "Not found") %>% distinct()
-country_bias <- gender_undet %>% select(Article.ID,Author_gender,Country_affiliation) %>% distinct()
-cb <- count(country_bias,Country_affiliation,Author_gender)
+gender_undet <- df2 %>% filter(Author_gender == "Undetermined" | Author_gender == "Not found") %>% distinct() %>% select(Article.ID,Author_gender,Mapping_affiliation) %>% distinct()
+cb <- count(gender_undet,Mapping_affiliation,Author_gender)
 
-##Gender proportions per paper and aggregate
-gender_prop <- gender %>% select(Article.ID, Author_gender,Author_order) %>% distinct() %>% filter(Author_gender != "Undetermined" & Author_gender != "Not found") %>% distinct()
-
-id <- unique(gender_prop$Article.ID)
-x <- c(1:n_distinct(gender_prop$Article.ID))
-gp <- data.frame(Article.ID=integer(),Author_gender=character(),Author_order=integer(),Prop_authorship=numeric())
-
-dat <- gender_prop %>% select(Article.ID, Author_order, Author_gender) %>% distinct()
-
-for (i in x){
-  y <- id[i]
-  sub <- dat %>% filter(Article.ID == y) %>% distinct()
-  z <- nrow(sub)
-  sub[4] <- round(1/z, digits=2)
-  gp <- rbind(gp,sub)
-}
-
-colnames(gp) <- c("Article.ID","Author_order","Author_gender","Prop_authorship")
-gender2 <- left_join(gender,gp,by=c("Article.ID","Author_order"))
-
-#Percent male vs. female vs. other authors
-gs_plot <- filter(gender_stats,Author_gender != "Not found")
+#Plotting gender distribution of author pool
 gs <- ggplot(gs_plot, aes(x="",y=n,fill=Author_gender)) +
   geom_bar(width=1, stat="identity") +
   scale_fill_brewer(palette="Accent") +
@@ -406,7 +243,6 @@ gs <- ggplot(gs_plot, aes(x="",y=n,fill=Author_gender)) +
   geom_text(aes(y=n, label=percent(n/n_a)), size=3, position=position_stack(vjust=0.5)) +
   ylab("Number of authors") +
   guides(fill=guide_legend(title="Gender"))
-  
 
 plot(gs)
 
@@ -428,22 +264,29 @@ ggplot(rg, aes(x=First_last,y=n)) +
   xlab("Author position") +
   guides(fill=guide_legend(title="Gender"))
 
-#Change over time
-gender_time <- gender %>% select(Article.ID,Author_gender,First_last,Pub_year) %>% filter(First_last != "other") %>% filter(Author_gender != "Undetermined") %>% filter(Author_gender != "Not found") %>% distinct() %>% group_by(Pub_year,First_last)
-gt <- count(gender_time,Author_gender,First_last)
 
-ggplot(gt, aes(Pub_year,n)) + 
-  geom_col(aes(fill=Author_gender)) +
+##Summarize gender over different variables
+##Remove undetermined and not found entries
+gender_mf <- df2 %>% filter(Author_gender != "Undetermined" & Author_gender != "Not found")
+
+##Over time
+#Proportion (overall male vs. female contribution)
+gp_year <- gender_mf %>% select(Article.ID,Author_gender,Author,Pub_year,Prop_authorship) %>% distinct()
+gpy <- aggregate(gp_year$Prop_authorship, by=list(Year=gp_year$Pub_year,Gender=gp_year$Author_gender), FUN=sum)
+
+#Author position
+gc_year <- gender_mf %>% select(Article.ID,Author_gender,First_last,Pub_year) %>% filter(First_last != "other") %>% distinct() %>% group_by(Pub_year,First_last)
+gcy <- count(gc_year,Pub_year,Author_gender,First_last)
+
+##Plotting
+ggplot(gcy, aes(Pub_year,n)) + 
+  geom_col(aes(fill=Author_gender),position=position_dodge()) +
   facet_grid(rows=vars(First_last), scales="free") +
   scale_x_continuous(breaks=seq(2003,2019,1), name="Publication year") +
-  scale_y_continuous(breaks=seq(0,200,50), name="Number of articles") +
-  theme(
-    axis.text.x=element_text(angle=45,hjust=1)
-  ) +
-  theme(
-    legend.position='bottom') +
   ylab("Number of articles") +
-  xlab("Author position") +
+  theme(
+    axis.text.x=element_text(angle=45,hjust=1),
+    legend.position='bottom') +
   scale_fill_brewer(palette = "Accent") +
   guides(fill=guide_legend(title="Gender"),
          guide=guide_legend(
@@ -456,11 +299,324 @@ ggplot(gt, aes(Pub_year,n)) +
            label.position="bottom"
          ))
 
+ggplot(gpy, aes(Year,x)) + 
+  geom_col(aes(fill=Gender),position=position_dodge()) +
+  scale_x_continuous(breaks=seq(2003,2019,1), name="Publication year") +
+  scale_y_continuous(breaks=seq(0,120,10), name="Proportion of published articles") +
+  theme(
+    axis.text.x=element_text(angle=45,hjust=1)
+  ) +
+  theme(
+    legend.position='bottom') +
+  scale_fill_brewer(palette = "Accent") +
+  guides(fill=guide_legend(title="Gender"),
+         guide=guide_legend(
+           direction="horizontal",
+           #keyheight= unit(2, units="mm"),
+           #keywidth = unit(70/length(labels), units="mm"),
+           title.position = "top",
+           title.hjust = 0.5,
+           label.hjust = 1,
+           label.position="bottom"
+         ))
+
+##By Country of Affiliation
+#Proportion (overall male vs. female contribution)
+gp_affil <- gender_mf %>% select(Article.ID,Author_gender,Author,Mapping_affiliation,Prop_authorship) %>% distinct()
+gpa <- aggregate(gp_affil$Prop_authorship, by=list(Affiliation=gp_affil$Mapping_affiliation,Gender=gp_affil$Author_gender), FUN=sum) %>% mutate(Affiliation = fct_reorder(Affiliation, desc(x)))
+gpa1 <- gpa %>% filter(Affiliation == "Australia" | Affiliation == "United States")
+gpa2 <- gpa %>% filter(Affiliation != "Australia") %>% filter(Affiliation != "United States")
+
+#Author position
+gc_affil <- gender_mf %>% select(Article.ID,Author_gender,First_last,Mapping_affiliation) %>% filter(First_last != "other") %>% distinct()
+gca <- count(gc_affil,Mapping_affiliation, Author_gender,First_last) %>% mutate(Mapping_affiliation = fct_reorder(Mapping_affiliation, desc(n)))
+gca1 <- gca %>% filter(Mapping_affiliation == "Australia" | Mapping_affiliation == "United States")
+gca2 <- gca %>% filter(Mapping_affiliation != "Australia") %>% filter(Mapping_affiliation != "United States")
+
+##Plotting
+a <- ggplot(gca1, aes(Mapping_affiliation,n)) + 
+  geom_col(aes(fill=Author_gender),position=position_dodge())+
+  facet_grid(rows=vars(First_last), scales="free") +
+  scale_fill_brewer(palette = "Accent") +
+  theme(
+    axis.text.x=element_text(angle=45,hjust=1),
+    axis.title.x=element_blank(),
+    legend.position='bottom') +
+  guides(fill=guide_legend(title="Gender"),
+         guide=guide_legend(
+           direction="horizontal",
+           #keyheight= unit(2, units="mm"),
+           #keywidth = unit(70/length(labels), units="mm"),
+           title.position = "top",
+           title.hjust = 0.5,
+           label.hjust = 1,
+           label.position="bottom"
+         ))
+
+b <- ggplot(gpa1, aes(Affiliation,x)) + 
+  geom_col(aes(fill=Gender)) +
+  scale_y_continuous(breaks=seq(0,800,50)) +
+  theme(
+    axis.text.x=element_text(angle=45,hjust=1),
+    axis.title.x=element_blank(),
+    legend.position='bottom') +
+  scale_fill_brewer(palette = "Accent") +
+  guides(fill=guide_legend(title="Gender"),
+         guide=guide_legend(
+           direction="horizontal",
+           #keyheight= unit(2, units="mm"),
+           #keywidth = unit(70/length(labels), units="mm"),
+           title.position = "top",
+           title.hjust = 0.5,
+           label.hjust = 1,
+           label.position="bottom"
+         ))
+
+c <- ggplot(gca2, aes(Mapping_affiliation,n)) + 
+  geom_col(aes(fill=Author_gender),position=position_dodge())+
+  facet_grid(rows=vars(First_last), scales="free") +
+  scale_fill_brewer(palette = "Accent") +
+  theme(
+    axis.text.x=element_text(angle=45,hjust=1),
+    axis.title.x=element_blank(),
+    legend.position='bottom') +
+  guides(fill=guide_legend(title="Gender"),
+         guide=guide_legend(
+           direction="horizontal",
+           #keyheight= unit(2, units="mm"),
+           #keywidth = unit(70/length(labels), units="mm"),
+           title.position = "top",
+           title.hjust = 0.5,
+           label.hjust = 1,
+           label.position="bottom"
+         ))
+
+d <- ggplot(gpa2, aes(Affiliation,x)) + 
+  geom_col(aes(fill=Gender)) +
+  scale_y_continuous(breaks=seq(0,800,10)) +
+  theme(
+    axis.text.x=element_text(angle=45,hjust=1),
+    axis.title.x=element_blank(),
+    legend.position='bottom') +
+  scale_fill_brewer(palette = "Accent") +
+  guides(fill=guide_legend(title="Gender"),
+         guide=guide_legend(
+           direction="horizontal",
+           #keyheight= unit(2, units="mm"),
+           #keywidth = unit(70/length(labels), units="mm"),
+           title.position = "top",
+           title.hjust = 0.5,
+           label.hjust = 1,
+           label.position="bottom"
+         ))
+
+fig_affil <- ggarrange(a,b,c,d,
+          labels=c("A","B","C","D"),
+          ncol=2, nrow=2,
+          common.legend=TRUE,
+          legend="bottom")
+
+annotate_figure(fig_affil,
+                left=text_grob("Number of articles", color="black",rot=90),
+                bottom=text_grob("Country of affiliation", color="black"))
+
+##By Marine Realm of Study
+#Proportion (overall male vs. female contribution)
+gp_marine <- gender_mf %>% select(Article.ID,Author_gender,Author,id,Prop_authorship) %>% filter(!is.na(id)) %>% filter(id != "Global") %>% filter(id != "Freshwater") %>% distinct()
+gpm <- aggregate(gp_marine$Prop_authorship, by=list(Realm=gp_marine$id,Gender=gp_marine$Author_gender), FUN=sum) %>% mutate(Realm = fct_reorder(Realm, desc(x)))
+
+#Author position
+gc_marine <- gender_mf %>% select(Article.ID,Author_gender,First_last,id) %>% filter(First_last != "other") %>% filter(!is.na(id)) %>% filter(id != "Global") %>% filter(id != "Freshwater") %>% distinct()
+gcm <- count(gc_marine,id,Author_gender,First_last) %>% mutate(id = fct_reorder(id, desc(n)))
+
+##Plotting
+ggplot(gcm, aes(id,n)) + 
+  geom_col(aes(fill=Author_gender),position=position_dodge()) +
+  facet_grid(rows=vars(First_last), scales="free") +
+  ylab("Number of articles") +
+  xlab("Marine realm studied") +
+  theme(
+    axis.text.x=element_text(angle=45,hjust=1),
+    legend.position='bottom') +
+  scale_fill_brewer(palette = "Accent") +
+  guides(fill=guide_legend(title="Gender"),
+         guide=guide_legend(
+           direction="horizontal",
+           #keyheight= unit(2, units="mm"),
+           #keywidth = unit(70/length(labels), units="mm"),
+           title.position = "top",
+           title.hjust = 0.5,
+           label.hjust = 1,
+           label.position="bottom"
+         ))
+
+ggplot(gpm, aes(Realm,x)) + 
+  geom_col(aes(fill=Gender)) +
+  scale_y_continuous(breaks=seq(0,800,50), name="Proportion of published articles") +
+  theme(
+    axis.text.x=element_text(angle=45,hjust=1),
+    legend.position='bottom') +
+  xlab("Marine realm studied") +
+  scale_fill_brewer(palette = "Accent") +
+  guides(fill=guide_legend(title="Gender"),
+         guide=guide_legend(
+           direction="horizontal",
+           #keyheight= unit(2, units="mm"),
+           #keywidth = unit(70/length(labels), units="mm"),
+           title.position = "top",
+           title.hjust = 0.5,
+           label.hjust = 1,
+           label.position="bottom"
+         ))
+
+##By study type
+#Proportion (overall male vs. female contribution)
+gp_study <- gender_mf %>% select(Article.ID,Author_gender,Author,Study_Type,Prop_authorship) %>% distinct()
+gps <- aggregate(gp_study$Prop_authorship, by=list(Study_Type=gp_study$Study_Type,Gender=gp_study$Author_gender), FUN=sum) %>% mutate(Study_Type = fct_reorder(Study_Type, desc(x)))
+
+#Author position
+gc_study <- gender_mf %>% select(Article.ID,Author_gender,First_last,Study_Type) %>% filter(First_last != "other") %>% distinct()
+gcs <- count(gc_study,Study_Type,Author_gender,First_last)
+gcs <- rbind(gcs,c("Editorials/Correspondence","Female","single",0))
+gcs <- rbind(gcs,c("Synthesis","Female","single",0))
+gcs <- rbind(gcs,c("Undetermined","Female","single",0))
+gcs$n <- as.integer(gcs$n)
+gcs <- gcs %>% mutate(Study_Type = fct_reorder(Study_Type, desc(n)))
+
+##Plotting
+ggplot(gcs, aes(Study_Type,n)) + 
+  geom_col(aes(fill=Author_gender),position=position_dodge()) +
+  facet_grid(rows=vars(First_last), scales="free") +
+  ylab("Number of articles") +
+  xlab("Study type") +
+  theme(
+    axis.text.x=element_text(angle=45,hjust=1),
+    legend.position='bottom') +
+  scale_fill_brewer(palette = "Accent") +
+  guides(fill=guide_legend(title="Gender"),
+         guide=guide_legend(
+           direction="horizontal",
+           #keyheight= unit(2, units="mm"),
+           #keywidth = unit(70/length(labels), units="mm"),
+           title.position = "top",
+           title.hjust = 0.5,
+           label.hjust = 1,
+           label.position="bottom"
+         ))
+
+ggplot(gps, aes(Study_Type,x)) + 
+  geom_col(aes(fill=Gender)) +
+  scale_y_continuous(breaks=seq(0,1100,50), name="Proportion of published articles") +
+  theme(
+    axis.text.x=element_text(angle=45,hjust=1),
+    legend.position='bottom') +
+  xlab("Study type") +
+  scale_fill_brewer(palette = "Accent") +
+  guides(fill=guide_legend(title="Gender"),
+         guide=guide_legend(
+           direction="horizontal",
+           #keyheight= unit(2, units="mm"),
+           #keywidth = unit(70/length(labels), units="mm"),
+           title.position = "top",
+           title.hjust = 0.5,
+           label.hjust = 1,
+           label.position="bottom"
+         ))
+
+##By Journal
+#Proportion (overall male vs. female contribution)
+gender_mf$Journal[gender_mf$Journal == "PROCEEDINGS OF THE NATIONAL ACADEMY OF SCIENCES OF THE UNITED STATES OF AMERICA"] <- "PNAS"
+gender_mf$Journal[gender_mf$Journal == "PROCEEDINGS OF THE ROYAL SOCIETY B-BIOLOGICAL SCIENCES"] <- "ProcB"
+gender_mf$Journal[gender_mf$Journal == "MARINE ECOLOGY PROGRESS SERIES"] <- "MEPS"
+gender_mf$Journal[gender_mf$Journal == "Plos One"] <- "PLoS One"
+
+gp_journal <- gender_mf %>% select(Article.ID,Author_gender,Author,Journal,Prop_authorship) %>% distinct()
+gpj <- aggregate(gp_journal$Prop_authorship, by=list(Journal=gp_journal$Journal,Gender=gp_journal$Author_gender), FUN=sum) %>% mutate(Journal = fct_reorder(Journal, desc(x)))
+
+#Author position
+gc_journal <- gender_mf %>% select(Article.ID,Author_gender,First_last,Journal) %>% filter(First_last != "other") %>% distinct()
+gcj <- count(gc_journal,Journal,Author_gender,First_last) %>% mutate(Journal = fct_reorder(Journal, desc(n)))
+
+##Plotting
+ggplot(gcj, aes(Journal,n)) + 
+  geom_col(aes(fill=Author_gender),position=position_dodge()) +
+  facet_grid(rows=vars(First_last), scales="free") +
+  ylab("Number of articles") +
+  xlab("Journal") +
+  theme(
+    axis.text.x=element_text(angle=45,hjust=1),
+    legend.position='bottom') +
+  scale_fill_brewer(palette = "Accent") +
+  guides(fill=guide_legend(title="Gender"),
+         guide=guide_legend(
+           direction="horizontal",
+           #keyheight= unit(2, units="mm"),
+           #keywidth = unit(70/length(labels), units="mm"),
+           title.position = "top",
+           title.hjust = 0.5,
+           label.hjust = 1,
+           label.position="bottom"
+         ))
+
+ggplot(gpj, aes(Journal,x)) + 
+  geom_col(aes(fill=Gender)) +
+  scale_y_continuous(breaks=seq(0,1100,50), name="Proportion of published articles") +
+  theme(
+    axis.text.x=element_text(angle=45,hjust=1),
+    legend.position='bottom') +
+  xlab("Journal") +
+  scale_fill_brewer(palette = "Accent") +
+  guides(fill=guide_legend(title="Gender"),
+         guide=guide_legend(
+           direction="horizontal",
+           #keyheight= unit(2, units="mm"),
+           #keywidth = unit(70/length(labels), units="mm"),
+           title.position = "top",
+           title.hjust = 0.5,
+           label.hjust = 1,
+           label.position="bottom"
+         ))
+
+##Times Cited
+#Proportion (overall male vs. female contribution)
+gp_cite <- gender_mf %>% select(Article.ID,Author_gender,Author,Prop_authorship) %>% distinct()
+gpc <- aggregate(gp_cite$Prop_authorship, by=list(Article.ID=gp_cite$Article.ID,Gender=gp_cite$Author_gender), FUN=sum) %>% arrange(Article.ID)
+cite <- gender_mf %>% select(Article.ID,Times.Cited) %>% distinct() 
+gpc <- left_join(gpc,cite,by="Article.ID")
+gpc <- gpc %>% filter(Gender != "Male")
+
+#Author position
+gc_cite <- gender_mf %>% select(Article.ID,Author_gender,First_last,Times.Cited) %>% filter(First_last != "other") %>% distinct()
+gcs <- count(gc_cite,Times.Cited,Author_gender,First_last)
+
+##Plotting
+ggplot(gpc, aes(x=x, y=Times.Cited)) +
+  geom_point(size=1.5, color="#7FC97F", alpha=0.6,stroke=0.5) +
+  scale_x_continuous(breaks=seq(0,1,0.1)) +
+  scale_y_continuous(breaks=seq(0,2750,250)) +
+  xlab("Proportion of female authorship (per article)") +
+  ylab("Number of citations")
+
 ##Affiliation analysis
+diversity <- df2 %>% select(Article.ID,Author,Author_order,First_last,Author_gender,Author.Based.In.Country,Author.Based.In.Sovereign,Mapping_Country,Mapping_affiliation,Prop_authorship) %>% distinct()
+diversity$Author.Based.In.Country <- as.character(diversity$Author.Based.In.Country)
+diversity$Author.Based.In.Sovereign <- as.character(diversity$Author.Based.In.Sovereign)
+diversity$Author.Based.In.Country <- gsub("^No ","No",diversity$Author.Based.In.Country)
+diversity$Author.Based.In.Country <- gsub("yes","Yes",diversity$Author.Based.In.Country)
+diversity$Author.Based.In.Country[is.na(diversity$Author.Based.In.Country)] <- "Undetermined"
+diversity$Author.Based.In.Country[diversity$Author.Based.In.Country == ""] <- "Undetermined"
 
 #How often first or last author was based in study country
+da <- diversity %>% select(Article.ID,First_last,Author.Based.In.Country) %>% distinct() %>% filter(First_last != "other") %>% distinct()
+dac <- count(da,First_last,Author.Based.In.Country)
 
-#Percent first, last, and other author orders that were based in study country
+#Proportion of author team from study country
+dp <- diversity %>% select(Article.ID,Author.Based.In.Country,Author,Prop_authorship) %>% distinct()
+dpp <- aggregate(dp$Prop_authorship, by=list(Article.ID=dp$Article.ID), FUN=sum) %>% arrange(Article.ID)
+
+cite <- gender_mf %>% select(Article.ID,Times.Cited) %>% distinct() 
+gpc <- left_join(gpc,cite,by="Article.ID")
+gpc <- gpc %>% filter(Gender != "Male")
 
 #How often anyone was based in the study country
 
