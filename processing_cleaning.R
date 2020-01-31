@@ -215,4 +215,24 @@ df2 <- left_join(df2,m_df,by="Article.ID") %>% distinct()
 
 df2$Prop_authorship <- as.numeric(df2$Prop_authorship)
 
-saveRDS(df2,file="final_data_for_analysis_01302020.rds")
+##Author contributions per paper
+df_dc <- df2 %>% select(Article.ID, Author_order) %>% distinct()
+id <- unique(df_dc$Article.ID)
+k <- c(1:n_distinct(df_dc$Article.ID))
+divprop <- data.frame(Article.ID=integer(),Author_order=integer(),Prop_overall_authorship=numeric())
+
+dat <- df_dc %>% select(Article.ID, Author_order) %>% distinct()
+dat[3] <- c("")
+
+for (i in k){
+  y <- id[i]
+  sub <- dat %>% filter(Article.ID == y) %>% distinct()
+  z <- n_distinct(sub$Author_order)
+  sub[3] <- 1/z
+  divprop <- rbind(divprop,sub)
+}
+
+colnames(divprop) <- c("Article.ID","Author_order","Prop_overall_authorship")
+df2 <- left_join(df2,divprop,by=c("Article.ID","Author_order")) %>% distinct()
+
+saveRDS(df2,file="final_data_for_analysis_01312020.rds")

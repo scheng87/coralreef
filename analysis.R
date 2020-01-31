@@ -19,7 +19,7 @@ library(forcats)
 library(ggpubr)
 
 #Read in data
-df2 <- readRDS("final_data_for_analysis_01302020.rds")
+df2 <- readRDS("final_data_for_analysis_01312020.rds")
 
 ##Summary statistics
 n <- n_distinct(df2$Article.ID)
@@ -598,7 +598,7 @@ ggplot(gpc, aes(x=x, y=Times.Cited)) +
   ylab("Number of citations")
 
 ##Affiliation analysis
-diversity <- df2 %>% select(Article.ID,Author,Author_order,First_last,Author_gender,Author.Based.In.Country,Author.Based.In.Sovereign,Mapping_Country,Mapping_affiliation,Prop_authorship) %>% distinct()
+diversity <- df2 %>% select(Article.ID,Author,Author_order,First_last,Author_gender,Author.Based.In.Country,Author.Based.In.Sovereign,Mapping_Country,Mapping_affiliation,Prop_overall_authorship) %>% distinct()
 diversity$Author.Based.In.Country <- as.character(diversity$Author.Based.In.Country)
 diversity$Author.Based.In.Sovereign <- as.character(diversity$Author.Based.In.Sovereign)
 diversity$Author.Based.In.Country <- gsub("^No ","No",diversity$Author.Based.In.Country)
@@ -611,12 +611,40 @@ da <- diversity %>% select(Article.ID,First_last,Author.Based.In.Country) %>% di
 dac <- count(da,First_last,Author.Based.In.Country)
 
 #Proportion of author team from study country
-dp <- diversity %>% select(Article.ID,Author.Based.In.Country,Author,Prop_authorship) %>% distinct()
-dpp <- aggregate(dp$Prop_authorship, by=list(Article.ID=dp$Article.ID), FUN=sum) %>% arrange(Article.ID)
+#By filtering for only yes in country, should eliminate any authors who have multiple affiliations that are causing a double count in the statistics. Out of country affiliation is dropped (however, still important to see this?)
+dp <- diversity %>% select(Article.ID,Author.Based.In.Country,Author,Prop_overall_authorship) %>% distinct()
+dpp <- aggregate(dp$Prop_overall_authorship, by=list(Article.ID=dp$Article.ID,InCountry=dp$Author.Based.In.Country), FUN=sum) %>% arrange(Article.ID)
+dppp <- spread(dpp,InCountry,x)
+dppp[is.na(dppp)] <- 0
 
-cite <- gender_mf %>% select(Article.ID,Times.Cited) %>% distinct() 
-gpc <- left_join(gpc,cite,by="Article.ID")
-gpc <- gpc %>% filter(Gender != "Male")
+dpp_c <- count(dppp,Yes)
+colnames(dpp_c) <- c("Prop.Based.In.Country","n")
+ggplot(dpp_c, aes(x=Prop.Based.In.Country, y=n)) +
+  geom_point(size=1.5, color="#7FC97F", alpha=0.6,stroke=0.5) +
+  scale_x_continuous(breaks=seq(0,1,0.1)) +
+  scale_y_continuous(breaks=seq(0,1000,100)) +
+  xlab("Proportion of author team based in study country") +
+  ylab("Number of articles")
+
+ggplot(dac, aes(First_last,n)) + 
+  geom_col(aes(fill=Author.Based.In.Country),position=position_dodge()) +
+  ylab("Number of articles") +
+  xlab("Author position") +
+  theme(
+    axis.text.x=element_text(angle=45,hjust=1),
+    legend.position='bottom') +
+  scale_fill_brewer(palette = "Accent") +
+  guides(fill=guide_legend(title="Is the author based in the study country?"),
+         guide=guide_legend(
+           direction="horizontal",
+           #keyheight= unit(2, units="mm"),
+           #keywidth = unit(70/length(labels), units="mm"),
+           title.position = "top",
+           title.hjust = 0.5,
+           label.hjust = 1,
+           label.position="bottom"
+         ))
+####NEED TO FIGURE OUT HOW TO DROP AUTHORS OTHER AFFILIATION HERE
 
 #How often anyone was based in the study country
 
