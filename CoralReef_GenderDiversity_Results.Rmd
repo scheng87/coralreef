@@ -388,11 +388,13 @@ d <- ggplot(gpa2, aes(Affiliation,x)) +
            label.position="bottom"
          ))
 
-fig_affil <- ggarrange(a,b,c,d,
-          labels=c("A","B","C","D"),
-          ncol=2, nrow=2,
+fig_affil <- ggarrange(c,d,                                               
+          ggarrange(a,b, ncol = 2, labels = c("A", "B")),
+          nrow = 3, 
+          labels = c("C","D"),
           common.legend=TRUE,
-          legend="bottom")
+          legend="bottom"
+          ) 
 
 annotate_figure(fig_affil,
                 left=text_grob("Number of articles", color="black",rot=90),
@@ -764,4 +766,81 @@ ggplot(dac, aes(First_last,n)) +
            label.hjust = 1,
            label.position="bottom"
          ))
+```
+
+```{r div_gender_collaboration, echo=FALSE, fig.cap='**Figure X.** A). How often papers are written by a national vs. international collaboration. B).how often male vs. female first and last authored papers were part of a national or international collaboration.'}
+##Number of single country publications vs. multiple country publications
+dna <- diversity %>% select(Article.ID,Author,First_last,Mapping_affiliation,Author_gender) %>% distinct()
+dna$num_aff_coun <- c("")
+dna$single <- c("")
+
+p <- c(1:n)
+id <- unique(dna$Article.ID)
+for (x in p){
+  i <- id[x]
+  sub <- filter(dna, Article.ID == i) %>% distinct()
+  dna$num_aff_coun[dna$Article.ID == i] <- n_distinct(sub$Mapping_affiliation)
+  if (n_distinct(sub$Mapping_affiliation) == 1){
+    dna$single[dna$Article.ID == i] <- c("Yes")
+  } else
+    dna$single[dna$Article.ID == i] <- c("No")
+}
+
+dna_plot <- dna %>% select(Article.ID,single) %>% distinct() %>% count(single)
+
+p1 <- ggplot(dna_plot,aes(x="",y=n,fill=single)) +
+  geom_col(width=1) +
+  ylab("Number of articles") +
+  xlab("") +
+  scale_x_discrete(labels=c("Overall")) +
+  scale_fill_brewer(palette = "Accent",labels=c("International","National")) +
+  guides(fill=guide_legend(title=""),
+         guide=guide_legend(
+           direction="horizontal",
+           #keyheight= unit(2, units="mm"),
+           #keywidth = unit(70/length(labels), units="mm"),
+           title.position = "top",
+           title.hjust = 0.5,
+           label.hjust = 1,
+           label.position="bottom"
+         ))
+  
+p1 <- p1 + coord_flip()
+  
+#Proportion of male and female first, last uthors who involved in an international/multiple country collaboration
+  
+dna_plot2 <- dna %>% select(Article.ID,Mapping_affiliation,single,First_last,Author_gender) %>% distinct() %>% count(single,First_last,Author_gender) %>% filter(First_last != "other") %>% filter(First_last != "single") %>% filter(Author_gender != "Not found") %>% filter(Author_gender != "Undetermined")
+
+p2 <- ggplot(dna_plot2, aes(x=Author_gender,y=n,fill=single)) + 
+  geom_col(position=position_dodge()) +
+  facet_grid(rows=vars(First_last), scales="free") +
+  ylab("Number of articles") +
+  xlab("") +
+  theme(
+    axis.text.x=element_text(angle=45,hjust=1),
+    legend.position='bottom') +
+  scale_fill_brewer(palette = "Accent",labels=c("International","National")) +
+  guides(fill=guide_legend(title=""),
+         guide=guide_legend(
+           direction="horizontal",
+           #keyheight= unit(2, units="mm"),
+           #keywidth = unit(70/length(labels), units="mm"),
+           title.position = "top",
+           title.hjust = 0.5,
+           label.hjust = 1,
+           label.position="bottom"
+         ))
+
+p2 <- p2 + coord_flip()
+
+fig_div <- ggarrange(p1,p2,
+          labels=c("A","B"),
+          ncol=1, nrow=2,
+          common.legend=TRUE,
+          legend="bottom",
+          heights=c(1,2))
+
+annotate_figure(fig_div,
+                bottom=text_grob("Number of articles", color="black"))
+
 ```

@@ -610,7 +610,70 @@ diversity$Author.Based.In.Country[diversity$Author.Based.In.Country == ""] <- "U
 da <- diversity %>% select(Article.ID,First_last,Author.Based.In.Country) %>% distinct() %>% filter(First_last != "other") %>% distinct()
 dac <- count(da,First_last,Author.Based.In.Country)
 
-#Proportion of author team from study country
+##Number of single country publications vs. multiple country publications
+dna <- diversity %>% select(Article.ID,Author,First_last,Mapping_affiliation,Author_gender) %>% distinct()
+dna$num_aff_coun <- c("")
+dna$single <- c("")
+
+p <- c(1:n)
+id <- unique(dna$Article.ID)
+for (x in p){
+  i <- id[x]
+  sub <- filter(dna, Article.ID == i) %>% distinct()
+  dna$num_aff_coun[dna$Article.ID == i] <- n_distinct(sub$Mapping_affiliation)
+  if (n_distinct(sub$Mapping_affiliation) == 1){
+    dna$single[dna$Article.ID == i] <- c("Yes")
+  } else
+    dna$single[dna$Article.ID == i] <- c("No")
+}
+
+dna_plot <- dna %>% select(Article.ID,single) %>% distinct() %>% count(single)
+
+p1 <- ggplot(dna_plot,aes(x="",y=n,fill=single)) +
+  geom_col(width=1) +
+  ylab("Number of articles") +
+  xlab("") +
+  scale_fill_brewer(palette = "Accent",labels=c("International","National")) +
+  guides(fill=guide_legend(title="Country authorship"),
+         guide=guide_legend(
+           direction="horizontal",
+           #keyheight= unit(2, units="mm"),
+           #keywidth = unit(70/length(labels), units="mm"),
+           title.position = "top",
+           title.hjust = 0.5,
+           label.hjust = 1,
+           label.position="bottom"
+         ))
+  
+  p1 + coord_flip()
+  
+#Proportion of male and female first, last uthors who involved in an international/multiple country collaboration
+  
+dna_plot2 <- dna %>% select(Article.ID,Mapping_affiliation,single,First_last,Author_gender) %>% distinct() %>% count(single,First_last,Author_gender) %>% filter(First_last != "other") %>% filter(First_last != "single") %>% filter(Author_gender != "Not found") %>% filter(Author_gender != "Undetermined")
+
+p2 <- ggplot(dna_plot2, aes(x=Author_gender,y=n,fill=single)) + 
+  geom_col(position=position_dodge()) +
+  facet_grid(rows=vars(First_last), scales="free") +
+  ylab("Number of articles") +
+  xlab("Gender") +
+  theme(
+    axis.text.x=element_text(angle=45,hjust=1),
+    legend.position='bottom') +
+  scale_fill_brewer(palette = "Accent",labels=c("International","National")) +
+  guides(fill=guide_legend(title=""),
+         guide=guide_legend(
+           direction="horizontal",
+           #keyheight= unit(2, units="mm"),
+           #keywidth = unit(70/length(labels), units="mm"),
+           title.position = "top",
+           title.hjust = 0.5,
+           label.hjust = 1,
+           label.position="bottom"
+         ))
+
+p2 + coord_flip()
+
+#Proportion of author team  and author position from study country
 #By filtering for only yes in country, should eliminate any authors who have multiple affiliations that are causing a double count in the statistics. Out of country affiliation is dropped (however, still important to see this?)
 dp <- diversity %>% select(Article.ID,Author.Based.In.Country,Author,Prop_overall_authorship) %>% distinct()
 dpp <- aggregate(dp$Prop_overall_authorship, by=list(Article.ID=dp$Article.ID,InCountry=dp$Author.Based.In.Country), FUN=sum) %>% arrange(Article.ID)
@@ -644,13 +707,14 @@ ggplot(dac, aes(First_last,n)) +
            label.hjust = 1,
            label.position="bottom"
          ))
-####NEED TO FIGURE OUT HOW TO DROP AUTHORS OTHER AFFILIATION HERE
-
-#How often anyone was based in the study country
-
-#For each country, those who were based in the country, what author position they tended to occupy
 
 ##Co-authorship network
 
-#Who is working with whom? What defines these clusters?
+#Who is working with whom?
+
+#For each country, where are all authors from
+
+#For territories, what proportion of authors are from the territory vs. the sovereign nation?
+
+
 
