@@ -235,4 +235,10 @@ for (i in k){
 colnames(divprop) <- c("Article.ID","Author_order","Prop_overall_authorship")
 df2 <- left_join(df2,divprop,by=c("Article.ID","Author_order")) %>% distinct()
 
-saveRDS(df2,file="final_data_for_analysis_01312020.rds")
+##Fixing journal names
+df2$Journal <- gsub("Plos One","PLOS ONE",df2$Journal)
+df2$Journal <- gsub("PLoS One","PLOS ONE",df2$Journal)
+
+##Assign regions
+
+saveRDS(df2,file="final_data_for_analysis_02282020.rds")

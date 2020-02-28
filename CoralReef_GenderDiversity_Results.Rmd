@@ -39,7 +39,7 @@ The goal of this project is to examine patterns in author diversity (gender/geog
 </span>
 
 ```{r data, include=FALSE}
-df2 <- readRDS("final_data_for_analysis_01312020.rds")
+df2 <- readRDS("final_data_for_analysis_02282020.rds")
 ```
 
 ## Summary statistics
@@ -58,16 +58,19 @@ This dataset represents works by ``r length(a)`` unique authors from ``r length(
 **The number of unique authors is going to be wrong as names were not standardized between databases). We need to decide whether we want to spend time cleaning this or not. Variations include Last,First; First Last; Last, First Initial**
 </span>
 
-```{r gg, fig.cap="**Figure 1.** Growth in coral reef publications over the last 15 years", echo=FALSE}
-growth <- df2 %>% select(Article.ID,Pub_year) %>% distinct()
-g <- count(growth,Pub_year)
 
-gg <- ggplot(g, aes(Pub_year,n)) + 
-  geom_col(fill="steelblue") +
-  scale_x_continuous(breaks=seq(2003,2019,1), name="Publication year") +
+```{r gg, fig.cap="**Figure 1.** Growth in coral reef publications over the last 15 years, disaggregated by journal", echo=FALSE}
+growth <- df2 %>% select(Article.ID,Pub_year,Journal) %>% distinct()
+g <- count(growth,Pub_year,Journal)
+
+gg <- ggplot(g, aes(Pub_year,n,fill=Journal)) + 
+  geom_bar(stat="identity") +
+  scale_fill_brewer(palette="Set3") +
+  scale_x_continuous(breaks=seq(2003,2018,1), name="Publication year") +
   scale_y_continuous(breaks=seq(0,200,50), name="Number of articles") +
   theme(
-    axis.text.x=element_text(angle=45,hjust=1)
+    axis.text.x=element_text(angle=45,hjust=1),
+    legend.position = "bottom"
   )
   
 plot(gg)
@@ -126,6 +129,9 @@ The following displays patterns in gender by looking at 4 metrics: author positi
 **Proportion of each gender's output was calculated by comparing the proportion of identified authorships for each gender in a given article. For example, if a paper had 9 authors, of which 8 were identified to gender, each authorship was granted an equal share of authorship (1/8 each). These fractions were then aggregated at different levels (e.g. countries, study_types, journals) to explore gender contributions. These reflect authorships and not individuals.**
 </span>
 
+<span style="color: green;">
+**Fix figure titles. First graph - proportion of women vs. men as one bar**
+</span>
 ```{r ge_data, include=FALSE}
 ##Summarize gender over different variables
 ##Remove undetermined and not found entries
@@ -134,7 +140,7 @@ gender_mf <- df2 %>% filter(Author_gender != "Undetermined" & Author_gender != "
 
 ### Trends over time
 
-```{r gender_time, fig.cap='**Figure X.** Change in proportion of genders in first, last, and single author positions over time', echo=FALSE}
+```{r gender_time, fig.cap='**Figure X.** Change in composition of gender in first, last, and single author positions over time', echo=FALSE}
 ##Over time
 #Proportion (overall male vs. female contribution)
 gp_year <- gender_mf %>% select(Article.ID,Author_gender,Author,Pub_year,Prop_authorship) %>% distinct()
@@ -146,7 +152,7 @@ gcy <- count(gc_year,Pub_year,Author_gender,First_last)
 
 ##Plotting
 ggplot(gcy, aes(Pub_year,n)) + 
-  geom_col(aes(fill=Author_gender),position=position_dodge()) +
+  geom_col(aes(fill=Author_gender),position=position_stack()) +
   facet_grid(rows=vars(First_last), scales="free") +
   scale_x_continuous(breaks=seq(2003,2019,1), name="Publication year") +
   ylab("Number of articles") +
@@ -164,7 +170,9 @@ ggplot(gcy, aes(Pub_year,n)) +
            label.hjust = 1,
            label.position="bottom"
          ))
+```
 
+```{r gender_prop_time, fig.cap='**Figure X.** Change in proportion of individual contribution of genders over time', echo=FALSE}
 ggplot(gpy, aes(Year,x)) + 
   geom_col(aes(fill=Gender),position=position_dodge()) +
   scale_x_continuous(breaks=seq(2003,2019,1), name="Publication year") +
@@ -225,22 +233,18 @@ map <- fortify(map, region="ISO3")
 
 ```
 
-Research was conducted in ``r nrow(filter(countries, counts !=0 & Territory == "N"))+2`` countries and ``r nrow(filter(countries, counts !=0 & Territory == "Y"))`` territories. The most studied countries were ``r countries[1,1]`` (n=``r countries[1,5]``) and ``r countries[2,1]`` (n=``r countries[2,5]``). 
+Research was conducted in ``r nrow(filter(countries, counts !=0 & Territory == "N"))+2`` countries and ``r nrow(filter(countries, counts !=0 & Territory == "Y"))`` territories. The most studied countries were ``r countries[1,1]`` (n=``r countries[1,5]``) and ``r countries[2,1]`` (n=``r countries[2,5]``). The figure below shows the geographic distribution of research effort in terms of areas under study (using any type of method, e.g. field studies, laboratory, and desk studies).
 
-```{r cc_plot, fig.cap="**Figure 2.** Geographic distribution of study countries", fig.height=7, fig.width=12, echo=FALSE}
-cc <- ggplot() + 
-  geom_map(data=countries, aes(map_id=Code, fill=counts),map=map) + 
-  geom_map(data=countries_zero, aes(map_id=Code),fill="#f0f0f0",map=map) + 
-  expand_limits(x=map$long,y=map$lat) + 
-  theme(panel.background = element_rect(fill = "grey50", colour = "white"), panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + 
-  scale_fill_gradient2(low="#deebf7",mid="#9ecae1",high="#08519c",midpoint=(max(countries$counts)/2),limits=c(0,max(countries$counts)))
-
-plot(cc)
-```
-
-<span style="color: purple;">
-**This one needs the legend to look nicer**
-</span>
+# ```{r cc_plot, fig.cap="**Figure 2.** Geographic distribution of study countries", fig.height=7, fig.width=12, echo=FALSE}
+# cc <- ggplot() + 
+#   geom_map(data=countries, aes(map_id=Code, fill=counts),map=map) + 
+#   geom_map(data=countries_zero, aes(map_id=Code),fill="#f0f0f0",map=map) + 
+#   expand_limits(x=map$long,y=map$lat) + 
+#   theme(panel.background = element_rect(fill = "grey50", colour = "white"), panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + 
+#   scale_fill_gradient2(low="#deebf7",mid="#9ecae1",high="#08519c",midpoint=(max(countries$counts)/2),limits=c(0,max(countries$counts)))
+# 
+# plot(cc)
+# ```
 
 ```{r cc_plot_alt, fig.cap='**Figure 2 (alternate).** Geographic distribution of study countries with discrete breaks', fig.height=7, fig.width=12, echo=FALSE}
 ##Define custom breaks for choropleth map
@@ -297,23 +301,41 @@ cd <- cc +
 plot(cd)
 ```
 
+<span style="color: green;">
+**Think of what country categories to split by - LMIC, global south v. global north. Add threshold for showing individual countries (at least 10 articles published in last 15 years). Do we want to compare to reef area?**
+</span>
+
+The following figures detail contribution of authorship by different genders disaggregated by country of author affiliation. The results presented here represent the countries whos authors have contributed to at least 20 unique articles over the past 15 years.
+
 ```{r gender_affil, fig.cap='**Figure X.** Gender distribution by country of affiliation. (A) First, last, and single author gender distribution for top two countries. (B) Proportion of authorship for top two countries. (C) First, last, and single, author gender distribution for all other countries. (D) Proportion of authorship for all other countries', fig.height=14, fig.width=12, echo=FALSE}
 ##By Country of Affiliation
 #Proportion (overall male vs. female contribution)
 gp_affil <- gender_mf %>% select(Article.ID,Author_gender,Author,Mapping_affiliation,Prop_authorship) %>% distinct()
-gpa <- aggregate(gp_affil$Prop_authorship, by=list(Affiliation=gp_affil$Mapping_affiliation,Gender=gp_affil$Author_gender), FUN=sum) %>% mutate(Affiliation = fct_reorder(Affiliation, desc(x)))
-gpa1 <- gpa %>% filter(Affiliation == "Australia" | Affiliation == "United States")
-gpa2 <- gpa %>% filter(Affiliation != "Australia") %>% filter(Affiliation != "United States")
+# gpa <- aggregate(gp_affil$Prop_authorship, by=list(Affiliation=gp_affil$Mapping_affiliation,Gender=gp_affil$Author_gender), FUN=sum) %>% mutate(Affiliation = fct_reorder(Affiliation, desc(x)))
+# gpa1 <- gpa %>% filter(Affiliation == "Australia" | Affiliation == "United States")
+# gpa2 <- gpa %>% filter(Affiliation != "Australia") %>% filter(Affiliation != "United States")
 
 #Author position
 gc_affil <- gender_mf %>% select(Article.ID,Author_gender,First_last,Mapping_affiliation) %>% filter(First_last != "other") %>% distinct()
 gca <- count(gc_affil,Mapping_affiliation, Author_gender,First_last) %>% mutate(Mapping_affiliation = fct_reorder(Mapping_affiliation, desc(n)))
 gca1 <- gca %>% filter(Mapping_affiliation == "Australia" | Mapping_affiliation == "United States")
-gca2 <- gca %>% filter(Mapping_affiliation != "Australia") %>% filter(Mapping_affiliation != "United States")
+gca2 <- gca %>% filter(Mapping_affiliation != "Australia") %>% filter(Mapping_affiliation != "United States") %>% filter(n > 9)
+
+#Adjusting country list for proportion to reflect only countries whos authors have contributed to at least 10 papers in last 15 years
+l <- gp_affil %>% select(Article.ID,Mapping_affiliation) %>% distinct()
+ll <- l %>% count(Mapping_affiliation) %>% filter (n >19)
+
+gp_affil2 <- left_join(ll,gp_affil,by=c("Mapping_affiliation"))
+
+gpa <- aggregate(gp_affil2$Prop_authorship, by=list(Affiliation=gp_affil2$Mapping_affiliation,Gender=gp_affil2$Author_gender), FUN=sum) %>% mutate(Affiliation = fct_reorder(Affiliation, desc(x)))
+gpa1 <- gpa %>% filter(Affiliation == "Australia" | Affiliation == "United States")
+gpa2 <- gpa %>% filter(Affiliation != "Australia") %>% filter(Affiliation != "United States")
+
+##Plotting
 
 ##Plotting
 a <- ggplot(gca1, aes(Mapping_affiliation,n)) + 
-  geom_col(aes(fill=Author_gender),position=position_dodge())+
+  geom_col(aes(fill=Author_gender),position=position_stack())+
   facet_grid(rows=vars(First_last), scales="free") +
   scale_fill_brewer(palette = "Accent") +
   theme(
@@ -351,7 +373,7 @@ b <- ggplot(gpa1, aes(Affiliation,x)) +
          ))
 
 c <- ggplot(gca2, aes(Mapping_affiliation,n)) + 
-  geom_col(aes(fill=Author_gender),position=position_dodge())+
+  geom_col(aes(fill=Author_gender),position=position_stack())+
   facet_grid(rows=vars(First_last), scales="free") +
   scale_fill_brewer(palette = "Accent") +
   theme(
@@ -388,8 +410,8 @@ d <- ggplot(gpa2, aes(Affiliation,x)) +
            label.position="bottom"
          ))
 
-fig_affil <- ggarrange(c,d,                                               
-          ggarrange(a,b, ncol = 2, labels = c("A", "B")),
+fig_affil <- ggarrange(                                              
+          ggarrange(a,b, ncol = 2, labels = c("A", "B")),c,d,
           nrow = 3, 
           labels = c("C","D"),
           common.legend=TRUE,
