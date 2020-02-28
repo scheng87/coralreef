@@ -40,6 +40,9 @@ The goal of this project is to examine patterns in author diversity (gender/geog
 
 ```{r data, include=FALSE}
 df2 <- readRDS("final_data_for_analysis_02282020.rds")
+
+##Remove 2019
+df2 <- df2 %>% filter(Pub_year != 2019)
 ```
 
 ## Summary statistics
@@ -154,7 +157,7 @@ gcy <- count(gc_year,Pub_year,Author_gender,First_last)
 ggplot(gcy, aes(Pub_year,n)) + 
   geom_col(aes(fill=Author_gender),position=position_stack()) +
   facet_grid(rows=vars(First_last), scales="free") +
-  scale_x_continuous(breaks=seq(2003,2019,1), name="Publication year") +
+  scale_x_continuous(breaks=seq(2003,2018,1), name="Publication year") +
   ylab("Number of articles") +
   theme(
     axis.text.x=element_text(angle=45,hjust=1),
@@ -175,7 +178,7 @@ ggplot(gcy, aes(Pub_year,n)) +
 ```{r gender_prop_time, fig.cap='**Figure X.** Change in proportion of individual contribution of genders over time', echo=FALSE}
 ggplot(gpy, aes(Year,x)) + 
   geom_col(aes(fill=Gender),position=position_dodge()) +
-  scale_x_continuous(breaks=seq(2003,2019,1), name="Publication year") +
+  scale_x_continuous(breaks=seq(2003,2018,1), name="Publication year") +
   scale_y_continuous(breaks=seq(0,120,10), name="Proportion of published articles") +
   theme(
     axis.text.x=element_text(angle=45,hjust=1)
@@ -234,17 +237,6 @@ map <- fortify(map, region="ISO3")
 ```
 
 Research was conducted in ``r nrow(filter(countries, counts !=0 & Territory == "N"))+2`` countries and ``r nrow(filter(countries, counts !=0 & Territory == "Y"))`` territories. The most studied countries were ``r countries[1,1]`` (n=``r countries[1,5]``) and ``r countries[2,1]`` (n=``r countries[2,5]``). The figure below shows the geographic distribution of research effort in terms of areas under study (using any type of method, e.g. field studies, laboratory, and desk studies).
-
-# ```{r cc_plot, fig.cap="**Figure 2.** Geographic distribution of study countries", fig.height=7, fig.width=12, echo=FALSE}
-# cc <- ggplot() + 
-#   geom_map(data=countries, aes(map_id=Code, fill=counts),map=map) + 
-#   geom_map(data=countries_zero, aes(map_id=Code),fill="#f0f0f0",map=map) + 
-#   expand_limits(x=map$long,y=map$lat) + 
-#   theme(panel.background = element_rect(fill = "grey50", colour = "white"), panel.grid.major = element_blank(), panel.grid.minor = element_blank()) + 
-#   scale_fill_gradient2(low="#deebf7",mid="#9ecae1",high="#08519c",midpoint=(max(countries$counts)/2),limits=c(0,max(countries$counts)))
-# 
-# plot(cc)
-# ```
 
 ```{r cc_plot_alt, fig.cap='**Figure 2 (alternate).** Geographic distribution of study countries with discrete breaks', fig.height=7, fig.width=12, echo=FALSE}
 ##Define custom breaks for choropleth map
@@ -413,7 +405,7 @@ d <- ggplot(gpa2, aes(Affiliation,x)) +
 fig_affil <- ggarrange(                                              
           ggarrange(a,b, ncol = 2, labels = c("A", "B")),c,d,
           nrow = 3, 
-          labels = c("C","D"),
+          labels = c("","C","D"),
           common.legend=TRUE,
           legend="bottom"
           ) 
@@ -658,7 +650,6 @@ ggplot(gps, aes(Study_Type,x)) +
 gender_mf$Journal[gender_mf$Journal == "PROCEEDINGS OF THE NATIONAL ACADEMY OF SCIENCES OF THE UNITED STATES OF AMERICA"] <- "PNAS"
 gender_mf$Journal[gender_mf$Journal == "PROCEEDINGS OF THE ROYAL SOCIETY B-BIOLOGICAL SCIENCES"] <- "ProcB"
 gender_mf$Journal[gender_mf$Journal == "MARINE ECOLOGY PROGRESS SERIES"] <- "MEPS"
-gender_mf$Journal[gender_mf$Journal == "Plos One"] <- "PLoS One"
 
 gp_journal <- gender_mf %>% select(Article.ID,Author_gender,Author,Journal,Prop_authorship) %>% distinct()
 gpj <- aggregate(gp_journal$Prop_authorship, by=list(Journal=gp_journal$Journal,Gender=gp_journal$Author_gender), FUN=sum) %>% mutate(Journal = fct_reorder(Journal, desc(x)))
