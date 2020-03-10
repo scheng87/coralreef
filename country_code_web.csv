@@ -1,249 +1,255 @@
-﻿Country,ISO ALPHA-3 code,Territory,Sovereignty
-Afghanistan,AFG,N,
-Åland Islands,ALA,Y,Finland
-Albania,ALB,N,
-Algeria,DZA,N,
-American Samoa,ASM,Y,United States
-Andorra,AND,N,
-Angola,AGO,N,
-Anguilla,AIA,N,
-Antarctica,ATA,Y,Varies
-Antigua and Barbuda,ATG,N,
-Argentina,ARG,N,
-Armenia,ARM,N,
-Aruba,ABW,Y,Netherlands
-Australia,AUS,N,
-Austria,AUT,N,
-Azerbaijan,AZE,N,
-Bahamas,BHS,N,
-Bahrain,BHR,N,
-Bangladesh,BGD,N,
-Barbados,BRB,N,
-Belarus,BLR,N,
-Belgium,BEL,N,
-Belize,BLZ,N,
-Benin,BEN,N,
-Bermuda,BMU,Y,United Kingdom
-Bhutan,BTN,N,
-Bolivia,BOL,N,
-"Bonaire, Sint Eustatius, Saba",BES,Y,Netherlands
-Bosnia and Herzegovina,BIH,N,
-Botswana,BWA,N,
-Bouvet Island,BVT,Y,Norway
-Brazil,BRA,N,
-British Indian Ocean Territory,IOT,Y,United Kingdom
-British Virgin Islands,VGB,Y,United Kingdom
-Brunei Darussalam,BRN,N,
-Bulgaria,BGR,N,
-Burkina Faso,BFA,N,
-Burundi,BDI,N,
-Cambodia,KHM,N,
-Cameroon,CMR,N,
-Canada,CAN,N,
-Cape Verde,CPV,N,
-Cayman Islands,CYM,Y,United Kingdom
-Central African Republic,CAF,N,
-Chad,TCD,N,
-Chile,CHL,N,
-China,CHN,N,
-Hong Kong Special Administrative Region of China,HKG,Y,China
-Macao Special Administrative Region of China,MAC,Y,China
-Christmas Island,CXR,Y,Australia
-Cocos (Keeling) Islands,CCK,Y,Australia
-Colombia,COL,N,
-Comoros,COM,N,
-Congo,COG,N,
-Cook Islands,COK,Y,New Zealand
-Costa Rica,CRI,N,
-Cote d'Ivoire,CIV,N,
-Croatia,HRV,N,
-Cuba,CUB,N,
-Curacao,CUW,Y,Netherlands
-Cyprus,CYP,N,
-Czech Republic,CZE,N,
-"Korea, The Democratic People's Republic Of",PRK,N,
-"Congo, The Democratic Republic Of",COD,N,
-Denmark,DNK,N,
-Djibouti,DJI,N,
-Dominica,DMA,N,
-Dominican Republic,DOM,N,
-Ecuador,ECU,N,
-Egypt,EGY,N,
-El Salvador,SLV,N,
-Equatorial Guinea,GNQ,N,
-Eritrea,ERI,N,
-Estonia,EST,N,
-Eswatini,SWZ,N,
-Ethiopia,ETH,N,
-Faroe Islands,FRO,Y,Denmark
-Falkland Islands (Malvinas),FLK,Y,United Kingdom
-Fiji,FJI,N,
-Finland,FIN,N,
-France,FRA,N,
-French Guiana,GUF,Y,France
-French Polynesia,PYF,Y,France
-French Southern Territories,ATF,Y,France
-Gabon,GAB,N,
-Gambia,GMB,N,
-Georgia,GEO,N,
-Germany,DEU,N,
-Ghana,GHA,N,
-Gibraltar,GIB,Y,United Kingdom
-Greece,GRC,N,
-Greenland,GRL,Y,Denmark
-Grenada,GRD,N,
-Guadeloupe,GLP,Y,France
-Guam,GUM,Y,United States
-Guatemala,GTM,N,
-Guernsey,GGY,Y,United Kingdom
-Guinea,GIN,N,
-Guinea-Bissau,GNB,N,
-Guyana,GUY,N,
-Heard Island and McDonald Islands,HMD,Y,Australia
-Haiti,HTI,N,
-Holy See,VAT,N,
-Honduras,HND,N,
-Hungary,HUN,N,
-Iceland,ISL,N,
-India,IND,N,
-Indonesia,IDN,N,
-"Iran, Islamic Republic of",IRN,N,
-Iraq,IRQ,N,
-Ireland,IRL,N,
-Isle of Man,IMN,Y,United Kingdom
-Israel,ISR,N,
-Italy,ITA,N,
-Jamaica,JAM,N,
-Japan,JPN,N,
-Jersey,JEY,Y,United Kingdom
-Jordan,JOR,N,
-Kazakhstan,KAZ,N,
-Kenya,KEN,N,
-Kiribati,KIR,N,
-Kuwait,KWT,N,
-Kyrgyzstan,KGZ,N,
-Lao People's Democratic Republic,LAO,N,
-Latvia,LVA,N,
-Lebanon,LBN,N,
-Lesotho,LSO,N,
-Liberia,LBR,N,
-Libya,LBY,N,
-Liechtenstein,LIE,N,
-Lithuania,LTU,N,
-Luxembourg,LUX,N,
-Madagascar,MDG,N,
-Malawi,MWI,N,
-Malaysia,MYS,N,
-Maldives,MDV,N,
-Mali,MLI,N,
-Malta,MLT,N,
-Marshall Islands,MHL,N,
-Martinique,MTQ,Y,France
-Mauritania,MRT,N,
-Mauritius,MUS,N,
-Mayotte,MYT,Y,France
-Mexico,MEX,N,
-"Micronesia, Federated States of",FSM,N,
-Moldova,MDA,N,
-Monaco,MCO,N,
-Mongolia,MNG,N,
-Montenegro,MNE,N,
-Montserrat,MSR,Y,United Kingdom
-Morocco,MAR,N,
-Mozambique,MOZ,N,
-Myanmar,MMR,N,
-Namibia,NAM,N,
-Nauru,NRU,N,
-Nepal,NPL,N,
-Netherlands,NLD,N,
-New Caledonia,NCL,Y,France
-New Zealand,NZL,N,
-Nicaragua,NIC,N,
-Niger,NER,N,
-Nigeria,NGA,N,
-Niue,NIU,Y,New Zealand
-Norfolk Island,NFK,Y,Australia
-Northern Mariana Islands,MNP,Y,United States
-Norway,NOR,N,
-"Palestine, State of",PSE,N,
-Oman,OMN,N,
-Pakistan,PAK,N,
-Palau,PLW,N,
-Panama,PAN,N,
-Papua New Guinea,PNG,N,
-Paraguay,PRY,N,
-Peru,PER,N,
-Philippines,PHL,N,
-Pitcairn,PCN,Y,United Kingdom
-Poland,POL,N,
-Portugal,PRT,N,
-Puerto Rico,PRI,Y,United States
-Qatar,QAT,N,
-Republic of Korea,KOR,N,
-Reunion,REU,Y,France
-Romania,ROU,N,
-Russian Federation,RUS,N,
-Rwanda,RWA,N,
-Saint-Barthélemy,BLM,Y,France
-"Saint Helena, Ascension, Tristan de Cunha",SHN,Y,United Kingdom
-Saint Kitts and Nevis,KNA,N,
-Saint Lucia,LCA,N,
-Saint-Martin (French part),MAF,Y,France
-Saint Pierre and Miquelon,SPM,Y,France
-Saint Vincent and the Grenadines,VCT,N,
-Samoa,WSM,N,
-San Marino,SMR,N,
-Sao Tome and Principe,STP,N,
-Saudi Arabia,SAU,N,
-Senegal,SEN,N,
-Serbia,SRB,N,
-Seychelles,SYC,N,
-Sierra Leone,SLE,N,
-Singapore,SGP,N,
-Sint Maarten,SXM,Y,Netherlands
-Slovakia,SVK,N,
-Slovenia,SVN,N,
-Solomon Islands,SLB,N,
-Somalia,SOM,N,
-South Africa,ZAF,N,
-South Georgia and the South Sandwich Islands,SGS,Y,United Kingdom
-Spain,ESP,N,
-Sri Lanka,LKA,N,
-Sudan,SDN,N,
-Suriname,SUR,N,
-Svalbard and Jan Mayen Islands,SJM,Y,Norway
-Sweden,SWE,N,
-Switzerland,CHE,N,
-Syrian Arab Republic,SYR,N,
-"Taiwan, Province of China",TWN,D,China
-Tajikistan,TJK,N,
-Thailand,THA,N,
-North Macedonia,MKD,N,
-Timor-Leste,TLS,N,
-Togo,TGO,N,
-Tokelau,TKL,Y,New Zealand
-Tonga,TON,N,
-Trinidad and Tobago,TTO,N,
-Tunisia,TUN,N,
-Turkey,TUR,N,
-Turkmenistan,TKM,N,
-Turks and Caicos Islands,TCA,Y,United Kingdom
-Tuvalu,TUV,N,
-Uganda,UGA,N,
-Ukraine,UKR,N,
-United Arab Emirates,ARE,N,
-United Kingdom,GBR,N,
-"Tanzania, United Republic Of",TZA,N,
-United States,USA,N,
-United States Minor Outlying Islands,UMI,Y,United States
-United States Virgin Islands,VIR,Y,United States
-Uruguay,URY,N,
-Uzbekistan,UZB,N,
-Vanuatu,VUT,N,
-Venezuela,VEN,N,
-Viet Nam,VNM,N,
-Wallis and Futuna Islands,WLF,Y,France
-Western Sahara,ESH,D,
-Yemen,YEM,N,
-Zambia,ZMB,N,
-Zimbabwe,ZWE,N,
+﻿Country,ISO ALPHA-3 code,Territory,Sovereignty,Latitude,Longitude,Reef area (km2),Region,Income
+Afghanistan,AFG,N,,33,65,,South Asia,Low-Income
+Åland Islands,ALA,Y,Finland,60.1995487,20.3711715,,Europe and Central Asia,Not categorized
+Albania,ALB,N,,41,20,,Europe and Central Asia,Upper-Middle Income
+Algeria,DZA,N,,28,3,,Middle East and North Africa,Upper-Middle Income
+American Samoa,ASM,Y,United States,-14.3333,-170,45,East Asia and Pacific,Upper-Middle Income
+Andorra,AND,N,,42.5,1.6,,Europe and Central Asia,High-Income
+Angola,AGO,N,,-12.5,18.5,,Sub-Saharan Africa,Lower-Middle Income
+Anguilla,AIA,N,,18.25,-63.1667,24,Latin America and the Caribbean,Not categorized
+Antarctica,ATA,Y,Varies,-90,0,,Antartica,Not categorized
+Antigua and Barbuda,ATG,N,,17.05,-61.8,55,Latin America and the Caribbean,High-Income
+Argentina,ARG,N,,-34,-64,,Latin America and the Caribbean,Upper-Middle Income
+Armenia,ARM,N,,40,45,,Europe and Central Asia,Upper-Middle Income
+Aruba,ABW,Y,Netherlands,12.5,-69.9667,67,Latin America and the Caribbean,High-Income
+Australia,AUS,N,,-27,133,32090,East Asia and Pacific,High-Income
+Austria,AUT,N,,47.3333,13.3333,,Europe and Central Asia,High-Income
+Azerbaijan,AZE,N,,40.5,47.5,,Europe and Central Asia,Upper-Middle Income
+Bahamas,BHS,N,,24.25,-76,2219,Latin America and the Caribbean,High-Income
+Bahrain,BHR,N,,26,50.55,209,Middle East and North Africa,High-Income
+Bangladesh,BGD,N,,24,90,5,South Asia,Lower-Middle Income
+Barbados,BRB,N,,13.1667,-59.5333,31,Latin America and the Caribbean,High-Income
+Belarus,BLR,N,,53,28,,Europe and Central Asia,Upper-Middle Income
+Belgium,BEL,N,,50.8333,4,,Europe and Central Asia,High-Income
+Belize,BLZ,N,,17.25,-88.75,878,Latin America and the Caribbean,Upper-Middle Income
+Benin,BEN,N,,9.5,2.25,,Sub-Saharan Africa,Low-Income
+Bermuda,BMU,Y,United Kingdom,32.3333,-64.75,530,North America,High-Income
+Bhutan,BTN,N,,27.5,90.5,,South Asia,Lower-Middle Income
+Bolivia,BOL,N,,-17,-65,,Latin America and the Caribbean,Lower-Middle Income
+"Bonaire, Sint Eustatius, Saba",BES,Y,Netherlands,12.1683718,-68.308183,186,Latin America and the Caribbean,Not categorized
+Bosnia and Herzegovina,BIH,N,,44,18,,Europe and Central Asia,Upper-Middle Income
+Botswana,BWA,N,,-22,24,,Sub-Saharan Africa,Upper-Middle Income
+Bouvet Island,BVT,Y,Norway,-54.4333,3.4,,Antartica,Not categorized
+Brazil,BRA,N,,-10,-55,702,Latin America and the Caribbean,Upper-Middle Income
+British Indian Ocean Territory,IOT,Y,United Kingdom,-6,71.5,1822,South Asia,Not categorized
+British Virgin Islands,VGB,Y,United Kingdom,18.5,-64.5,138,Latin America and the Caribbean,High-Income
+Brunei Darussalam,BRN,N,,4.5,114.6667,63,East Asia and Pacific,High-Income
+Bulgaria,BGR,N,,43,25,,Europe and Central Asia,Upper-Middle Income
+Burkina Faso,BFA,N,,13,-2,,Sub-Saharan Africa,Low-Income
+Burundi,BDI,N,,-3.5,30,,Sub-Saharan Africa,Low-Income
+Cambodia,KHM,N,,13,105,46,East Asia and Pacific,Lower-Middle Income
+Cameroon,CMR,N,,6,12,,Sub-Saharan Africa,Lower-Middle Income
+Canada,CAN,N,,60,-95,,North America,High-Income
+Cape Verde,CPV,N,,16,-24,,Sub-Saharan Africa,Lower-Middle Income
+Cayman Islands,CYM,Y,United Kingdom,19.5,-80.5,137,Latin America and the Caribbean,High-Income
+Central African Republic,CAF,N,,7,21,,Sub-Saharan Africa,Low-Income
+Chad,TCD,N,,15,19,,Sub-Saharan Africa,Low-Income
+Chile,CHL,N,,-30,-71,,Latin America and the Caribbean,High-Income
+China,CHN,N,,35,105,380,East Asia and Pacific,Upper-Middle Income
+Hong Kong Special Administrative Region of China,HKG,Y,China,22.25,114.1667,,East Asia and Pacific,High-Income
+Macao Special Administrative Region of China,MAC,Y,China,22.1667,113.55,,East Asia and Pacific,High-Income
+Christmas Island,CXR,Y,Australia,-10.5,105.6667,5,East Asia and Pacific,Not categorized
+Cocos (Keeling) Islands,CCK,Y,Australia,-12.5,96.8333,116,East Asia and Pacific,Not categorized
+Colombia,COL,N,,4,-72,941,Latin America and the Caribbean,Upper-Middle Income
+Comoros,COM,N,,-12.1667,44.25,220,Sub-Saharan Africa,Lower-Middle Income
+Congo,COG,N,,-1,15,,Sub-Saharan Africa,Lower-Middle Income
+Cook Islands,COK,Y,New Zealand,-21.2333,-159.7667,255,East Asia and Pacific,Not categorized
+Costa Rica,CRI,N,,10,-84,70,Latin America and the Caribbean,Upper-Middle Income
+Cote d'Ivoire,CIV,N,,8,-5,,Sub-Saharan Africa,Lower-Middle Income
+Croatia,HRV,N,,45.1667,15.5,,Europe and Central Asia,High-Income
+Cuba,CUB,N,,21.5,-80,2679,Latin America and the Caribbean,Upper-Middle Income
+Curacao,CUW,Y,Netherlands,12.2135221,-68.9495816,,Latin America and the Caribbean,High-Income
+Cyprus,CYP,N,,35,33,,Europe and Central Asia,High-Income
+Czech Republic,CZE,N,,49.75,15.5,,Europe and Central Asia,High-Income
+"Korea, The Democratic People's Republic Of",PRK,N,,40,127,,East Asia and Pacific,Low-Income
+"Congo, The Democratic Republic Of",COD,N,,0,25,,Sub-Saharan Africa,Low-Income
+Denmark,DNK,N,,56,10,,Europe and Central Asia,High-Income
+Djibouti,DJI,N,,11.5,43,246,Middle East and North Africa,Lower-Middle Income
+Dominica,DMA,N,,15.4167,-61.3333,16,Latin America and the Caribbean,Upper-Middle Income
+Dominican Republic,DOM,N,,19,-70.6667,352,Latin America and the Caribbean,Upper-Middle Income
+Ecuador,ECU,N,,-2,-77.5,126,Latin America and the Caribbean,Upper-Middle Income
+Egypt,EGY,N,,27,30,3264,Middle East and North Africa,Lower-Middle Income
+El Salvador,SLV,N,,13.8333,-88.9167,,Latin America and the Caribbean,Lower-Middle Income
+Equatorial Guinea,GNQ,N,,2,10,,Sub-Saharan Africa,Upper-Middle Income
+Eritrea,ERI,N,,15,39,1590,Sub-Saharan Africa,Low-Income
+Estonia,EST,N,,59,26,,Europe and Central Asia,High-Income
+Eswatini,SWZ,N,,-26.5,31.5,,Sub-Saharan Africa,Lower-Middle Income
+Ethiopia,ETH,N,,8,38,,Sub-Saharan Africa,Low-Income
+Faroe Islands,FRO,Y,Denmark,62,-7,,Europe and Central Asia,High-Income
+Falkland Islands (Malvinas),FLK,Y,United Kingdom,-51.75,-59,,Latin America and the Caribbean,Not categorized
+Fiji,FJI,N,,-18,175,3386,East Asia and Pacific,Upper-Middle Income
+Finland,FIN,N,,64,26,,Europe and Central Asia,High-Income
+France,FRA,N,,46,2,,Europe and Central Asia,High-Income
+French Guiana,GUF,Y,France,4,-53,,Latin America and the Caribbean,Not categorized
+French Polynesia,PYF,Y,France,-15,-140,3016,East Asia and Pacific,High-Income
+French Southern Territories,ATF,Y,France,-43,67,271,Antartica,Not categorized
+Gabon,GAB,N,,-1,11.75,,Sub-Saharan Africa,Upper-Middle Income
+Gambia,GMB,N,,13.4667,-16.5667,,Sub-Saharan Africa,Low-Income
+Georgia,GEO,N,,42,43.5,,Europe and Central Asia,Upper-Middle Income
+Germany,DEU,N,,51,9,,Europe and Central Asia,High-Income
+Ghana,GHA,N,,8,-2,,Sub-Saharan Africa,Lower-Middle Income
+Gibraltar,GIB,Y,United Kingdom,36.1833,-5.3667,,Europe and Central Asia,High-Income
+Greece,GRC,N,,39,22,,Europe and Central Asia,High-Income
+Greenland,GRL,Y,Denmark,72,-40,,Europe and Central Asia,High-Income
+Grenada,GRD,N,,12.1167,-61.6667,51,Latin America and the Caribbean,Upper-Middle Income
+Guadeloupe,GLP,Y,France,16.25,-61.5833,114,Latin America and the Caribbean,Not categorized
+Guam,GUM,Y,United States,13.4667,144.7833,,East Asia and Pacific,High-Income
+Guatemala,GTM,N,,15.5,-90.25,,Latin America and the Caribbean,Upper-Middle Income
+Guernsey,GGY,Y,United Kingdom,49.5,-2.56,,Europe and Central Asia,Not categorized
+Guinea,GIN,N,,11,-10,,Sub-Saharan Africa,Low-Income
+Guinea-Bissau,GNB,N,,12,-15,,Sub-Saharan Africa,Low-Income
+Guyana,GUY,N,,5,-59,,Latin America and the Caribbean,Upper-Middle Income
+Heard Island and McDonald Islands,HMD,Y,Australia,-53.1,72.5167,,Antartica,Not categorized
+Haiti,HTI,N,,19,-72.4167,330,Latin America and the Caribbean,Low-Income
+Holy See,VAT,N,,41.9,12.45,671,Europe and Central Asia,Not categorized
+Honduras,HND,N,,15,-86.5,,Latin America and the Caribbean,Lower-Middle Income
+Hungary,HUN,N,,47,20,,Europe and Central Asia,High-Income
+Iceland,ISL,N,,65,-18,,Europe and Central Asia,High-Income
+India,IND,N,,20,77,2048,South Asia,Lower-Middle Income
+Indonesia,IDN,N,,-5,120,20000,East Asia and Pacific,Lower-Middle Income
+"Iran, Islamic Republic of",IRN,N,,32,53,118,Middle East and North Africa,Upper-Middle Income
+Iraq,IRQ,N,,33,44,,Middle East and North Africa,Upper-Middle Income
+Ireland,IRL,N,,53,-8,,Europe and Central Asia,High-Income
+Isle of Man,IMN,Y,United Kingdom,54.23,-4.55,,Europe and Central Asia,High-Income
+Israel,ISR,N,,31.5,34.75,1,Middle East and North Africa,High-Income
+Italy,ITA,N,,42.8333,12.8333,,Europe and Central Asia,High-Income
+Jamaica,JAM,N,,18.25,-77.5,439,Latin America and the Caribbean,Upper-Middle Income
+Japan,JPN,N,,36,138,1043,East Asia and Pacific,High-Income
+Jersey,JEY,Y,United Kingdom,49.21,-2.13,,Europe and Central Asia,Not categorized
+Jordan,JOR,N,,31,36,3,Middle East and North Africa,Upper-Middle Income
+Kazakhstan,KAZ,N,,48,68,,Europe and Central Asia,Upper-Middle Income
+Kenya,KEN,N,,1,38,409,Sub-Saharan Africa,Lower-Middle Income
+Kiribati,KIR,N,,1.4167,173,182,East Asia and Pacific,Lower-Middle Income
+Kuwait,KWT,N,,29.3375,47.6581,73,Middle East and North Africa,High-Income
+Kyrgyzstan,KGZ,N,,41,75,,Europe and Central Asia,Lower-Middle Income
+Lao People's Democratic Republic,LAO,N,,18,105,,East Asia and Pacific,Lower-Middle Income
+Latvia,LVA,N,,57,25,,Europe and Central Asia,High-Income
+Lebanon,LBN,N,,33.8333,35.8333,,Middle East and North Africa,Upper-Middle Income
+Lesotho,LSO,N,,-29.5,28.5,,Sub-Saharan Africa,Lower-Middle Income
+Liberia,LBR,N,,6.5,-9.5,,Sub-Saharan Africa,Low-Income
+Libya,LBY,N,,25,17,,Middle East and North Africa,Upper-Middle Income
+Liechtenstein,LIE,N,,47.1667,9.5333,,Europe and Central Asia,High-Income
+Lithuania,LTU,N,,56,24,,Europe and Central Asia,High-Income
+Luxembourg,LUX,N,,49.75,6.1667,,Europe and Central Asia,High-Income
+Madagascar,MDG,N,,-20,47,2414,Sub-Saharan Africa,Low-Income
+Malawi,MWI,N,,-13.5,34,,Sub-Saharan Africa,Low-Income
+Malaysia,MYS,N,,2.5,112.5,1721,East Asia and Pacific,Upper-Middle Income
+Maldives,MDV,N,,3.25,73,2714,South Asia,Upper-Middle Income
+Mali,MLI,N,,17,-4,,Sub-Saharan Africa,Low-Income
+Malta,MLT,N,,35.8333,14.5833,,Middle East and North Africa,High-Income
+Marshall Islands,MHL,N,,9,168,2005,East Asia and Pacific,Upper-Middle Income
+Martinique,MTQ,Y,France,14.6667,-61,72,East Asia and Pacific,Not categorized
+Mauritania,MRT,N,,20,-12,,Sub-Saharan Africa,Lower-Middle Income
+Mauritius,MUS,N,,-20.2833,57.55,745,Sub-Saharan Africa,Upper-Middle Income
+Mayotte,MYT,Y,France,-12.8333,45.1667,302,Sub-Saharan Africa,Not categorized
+Mexico,MEX,N,,23,-102,935,Latin America and the Caribbean,Upper-Middle Income
+"Micronesia, Federated States of",FSM,N,,6.9167,158.25,3192,East Asia and Pacific,Lower-Middle Income
+Moldova,MDA,N,,47,29,,Europe and Central Asia,Lower-Middle Income
+Monaco,MCO,N,,43.7333,7.4,,Europe and Central Asia,High-Income
+Mongolia,MNG,N,,46,105,,East Asia and Pacific,Lower-Middle Income
+Montenegro,MNE,N,,42,19,,Europe and Central Asia,Upper-Middle Income
+Montserrat,MSR,Y,United Kingdom,16.75,-62.2,2,Latin America and the Caribbean,Not categorized
+Morocco,MAR,N,,32,-5,,Middle East and North Africa,Lower-Middle Income
+Mozambique,MOZ,N,,-18.25,35,1685,Sub-Saharan Africa,Low-Income
+Myanmar,MMR,N,,22,98,610,East Asia and Pacific,Lower-Middle Income
+Namibia,NAM,N,,-22,17,,Sub-Saharan Africa,Upper-Middle Income
+Nauru,NRU,N,,-0.5333,166.9167,6,East Asia and Pacific,Upper-Middle Income
+Nepal,NPL,N,,28,84,,South Asia,Low-Income
+Netherlands,NLD,N,,52.5,5.75,,Europe and Central Asia,High-Income
+New Caledonia,NCL,Y,France,-21.5,165.5,4598,East Asia and Pacific,High-Income
+New Zealand,NZL,N,,-41,174,,East Asia and Pacific,High-Income
+Nicaragua,NIC,N,,13,-85,464,Latin America and the Caribbean,Lower-Middle Income
+Niger,NER,N,,16,8,,Sub-Saharan Africa,Low-Income
+Nigeria,NGA,N,,10,8,,Sub-Saharan Africa,Lower-Middle Income
+Niue,NIU,Y,New Zealand,-19.0333,-169.8667,15,East Asia and Pacific,Not categorized
+Norfolk Island,NFK,Y,Australia,-29.0333,167.95,,East Asia and Pacific,Not categorized
+Northern Mariana Islands,MNP,Y,United States,15.2,145.75,,East Asia and Pacific,High-Income
+Norway,NOR,N,,62,10,,Europe and Central Asia,High-Income
+"Palestine, State of",PSE,N,,32,35.25,,Middle East and North Africa,Lower-Middle Income
+Oman,OMN,N,,21,57,267,Middle East and North Africa,High-Income
+Pakistan,PAK,N,,30,70,,South Asia,Lower-Middle Income
+Palau,PLW,N,,7.5,134.5,510,East Asia and Pacific,High-Income
+Panama,PAN,N,,9,-80,635,Latin America and the Caribbean,High-Income
+Papua New Guinea,PNG,N,,-6,147,7303,East Asia and Pacific,Lower-Middle Income
+Paraguay,PRY,N,,-23,-58,,Latin America and the Caribbean,Upper-Middle Income
+Peru,PER,N,,-10,-76,,Latin America and the Caribbean,Upper-Middle Income
+Philippines,PHL,N,,13,122,12092,East Asia and Pacific,Lower-Middle Income
+Pitcairn,PCN,Y,United Kingdom,-24.7,-127.4,40,East Asia and Pacific,Not categorized
+Poland,POL,N,,52,20,,Europe and Central Asia,High-Income
+Portugal,PRT,N,,39.5,-8,,Europe and Central Asia,High-Income
+Puerto Rico,PRI,Y,United States,18.25,-66.5,159,Latin America and the Caribbean,High-Income
+Qatar,QAT,N,,25.5,51.25,156,Middle East and North Africa,High-Income
+Republic of Korea,KOR,N,,37,127.5,,East Asia and Pacific,High-Income
+Reunion,REU,Y,France,-21.1,55.6,12,South Asia,Not categorized
+Romania,ROU,N,,46,25,,Europe and Central Asia,Upper-Middle Income
+Russian Federation,RUS,N,,60,100,,Europe and Central Asia,Upper-Middle Income
+Rwanda,RWA,N,,-2,30,,Sub-Saharan Africa,Low-Income
+Saint-Barthélemy,BLM,Y,France,17.9139222,-62.8338521,,Latin America and the Caribbean,Not categorized
+"Saint Helena, Ascension, Tristan de Cunha",SHN,Y,United Kingdom,-15.9333,-5.7,,Atlantic,Not categorized
+Saint Kitts and Nevis,KNA,N,,17.3333,-62.75,42,Latin America and the Caribbean,High-Income
+Saint Lucia,LCA,N,,13.8833,-61.1333,30,Latin America and the Caribbean,Upper-Middle Income
+Saint-Martin (French part),MAF,Y,France,18.0858547,-63.0618597,17,Latin America and the Caribbean,High-Income
+Saint Pierre and Miquelon,SPM,Y,France,46.8333,-56.3333,,North America,Not categorized
+Saint Vincent and the Grenadines,VCT,N,,13.25,-61.2,34,Latin America and the Caribbean,Upper-Middle Income
+Samoa,WSM,N,,-13.5833,-172.3333,201,East Asia and Pacific,Upper-Middle Income
+San Marino,SMR,N,,43.7667,12.4167,,Europe and Central Asia,High-Income
+Sao Tome and Principe,STP,N,,1,7,,Sub-Saharan Africa,Lower-Middle Income
+Saudi Arabia,SAU,N,,25,45,3430,Middle East and North Africa,High-Income
+Senegal,SEN,N,,14,-14,,Sub-Saharan Africa,Lower-Middle Income
+Serbia,SRB,N,,44,21,,Europe and Central Asia,Upper-Middle Income
+Seychelles,SYC,N,,-4.5833,55.6667,1503,Sub-Saharan Africa,High-Income
+Sierra Leone,SLE,N,,8.5,-11.5,,Sub-Saharan Africa,Low-Income
+Singapore,SGP,N,,1.3667,103.8,4,East Asia and Pacific,High-Income
+Sint Maarten,SXM,Y,Netherlands,18.0347188,-63.0681114,2,Latin America and the Caribbean,High-Income
+Slovakia,SVK,N,,48.6667,19.5,,Europe and Central Asia,High-Income
+Slovenia,SVN,N,,46,15,,Europe and Central Asia,High-Income
+Solomon Islands,SLB,N,,-8,159,2822,East Asia and Pacific,Lower-Middle Income
+Somalia,SOM,N,,10,49,405,Sub-Saharan Africa,Low-Income
+South Africa,ZAF,N,,-29,24,1,Sub-Saharan Africa,Upper-Middle Income
+South Georgia and the South Sandwich Islands,SGS,Y,United Kingdom,-54.5,-37,,Antartica,Not categorized
+Spain,ESP,N,,40,-4,,Europe and Central Asia,High-Income
+Sri Lanka,LKA,N,,7,81,110,South Asia,Upper-Middle Income
+Sudan,SDN,N,,15,30,620,Sub-Saharan Africa,Lower-Middle Income
+Suriname,SUR,N,,4,-56,,Latin America and the Caribbean,Upper-Middle Income
+Svalbard and Jan Mayen Islands,SJM,Y,Norway,78,20,,Europe and Central Asia,Not categorized
+Sweden,SWE,N,,62,15,,Europe and Central Asia,High-Income
+Switzerland,CHE,N,,47,8,,Europe and Central Asia,High-Income
+Syrian Arab Republic,SYR,N,,35,38,,Middle East and North Africa,Low-Income
+"Taiwan, Province Of China",TWN,D,China,23.5,121,377,East Asia and Pacific,High-Income
+Tajikistan,TJK,N,,39,71,,Europe and Central Asia,Low-Income
+Thailand,THA,N,,15,100,185,East Asia and Pacific,Upper-Middle Income
+North Macedonia,MKD,N,,41.6137143,21.743258,,Europe and Central Asia,Upper-Middle Income
+Timor-Leste,TLS,N,,-8.55,125.5167,35,East Asia and Pacific,Lower-Middle Income
+Togo,TGO,N,,8,1.1667,,Sub-Saharan Africa,Low-Income
+Tokelau,TKL,Y,New Zealand,-9,-172,97,East Asia and Pacific,Not categorized
+Tonga,TON,N,,-20,-175,997,East Asia and Pacific,Upper-Middle Income
+Trinidad and Tobago,TTO,N,,11,-61,32,Latin America and the Caribbean,High-Income
+Tunisia,TUN,N,,34,9,,Middle East and North Africa,Lower-Middle Income
+Turkey,TUR,N,,39,35,,Europe and Central Asia,Upper-Middle Income
+Turkmenistan,TKM,N,,40,60,,Europe and Central Asia,Upper-Middle Income
+Turks and Caicos,TCA,Y,United Kingdom,21.75,-71.5833,193,Latin America and the Caribbean,High-Income
+Tuvalu,TUV,N,,-8,178,891,East Asia and Pacific,Upper-Middle Income
+Uganda,UGA,N,,1,32,,Sub-Saharan Africa,Low-Income
+Ukraine,UKR,N,,49,32,,Europe and Central Asia,Lower-Middle Income
+United Arab Emirates,ARE,N,,24,54,129,Middle East and North Africa,High-Income
+United Kingdom,GBR,N,,54,-2,,Europe and Central Asia,High-Income
+"Tanzania, United Republic Of",TZA,N,,-6,35,1825,Sub-Saharan Africa,Low-Income
+United States,USA,N,,38,-97,4110,North America,High-Income
+United States Minor Outlying Islands,UMI,Y,United States,19.2833,166.6,1964,East Asia and Pacific,Not categorized
+United States Virgin Islands,VIR,Y,United States,18.3333,-64.8333,34,Latin America and the Caribbean,High-Income
+Uruguay,URY,N,,-33,-56,,Latin America and the Caribbean,High-Income
+Uzbekistan,UZB,N,,41,64,,Europe and Central Asia,Lower-Middle Income
+Vanuatu,VUT,N,,-16,167,711,East Asia and Pacific,Lower-Middle Income
+Venezuela (Bolivarian Republic of),VEN,N,,8,-66,349,Latin America and the Caribbean,Upper-Middle Income
+Viet Nam,VNM,N,,16,106,423,East Asia and Pacific,Lower-Middle Income
+Wallis and Futuna Islands,WLF,Y,France,-13.3,-176.2,413,East Asia and Pacific,Not categorized
+Western Sahara,ESH,D,,24.5,-13,,Sub-Saharan Africa,Not categorized
+Yemen,YEM,N,,15,48,660,Middle East and North Africa,Low-Income
+Zambia,ZMB,N,,-15,30,,Sub-Saharan Africa,Lower-Middle Income
+Zimbabwe,ZWE,N,,-20,30,,Sub-Saharan Africa,Lower-Middle Income
+Corsica (France),,Y,France,42.0396,9.0129,,Europe and Central Asia,Not categorized
+Chagos,,D,,-4.4167,72.6,,South Asia,Not categorized
+Bonaire,,,,12.1683718,-68.308183,186,Latin America and the Caribbean,Not categorized
+Iran,,,,32,53,,Middle East and North Africa,Upper-Middle Income
+Venezuela,,,,8,-66,349,Latin America and the Caribbean,Upper-Middle Income
+Neth Antilles,,,,12.226079,-69.0600891,,Latin America and the Caribbean,Not categorized

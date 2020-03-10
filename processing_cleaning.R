@@ -63,9 +63,10 @@ df_c <- df_c %>% filter(!is.na(Study.Country)) %>% distinct()
 
 #Fix syntax and delimiter between countries, fixing mispellings and typos
 df_c$Study.Country <- gsub(', ',',',df_c$Study.Country)
+df_c$Study.Country <- gsub('Bonaire,Sint Eustatius,Saba','Bonaire, Sint Eustatius, Saba',df_c$Study.Country)
 df_c$Study.Country <- gsub('Congo,The Democratic Republic Of The','Congo, The Democratic Republic Of',df_c$Study.Country)
 df_c$Study.Country <- gsub('Congo,The Democratic Republic Of','Congo, The Democratic Republic Of',df_c$Study.Country)
-df_c$Study.Country <- gsub('Iran,Islamic Republic Of','Iran, Islamic Republic Of',df_c$Study.Country)
+df_c$Study.Country <- gsub('Iran,Islamic Republic Of','Iran, Islamic Republic of',df_c$Study.Country)
 df_c$Study.Country <- gsub('Korea,South','Republic of Korea',df_c$Study.Country)
 df_c$Study.Country <- gsub('Korea,North',"Korea, The Democratic People's Republic Of",df_c$Study.Country)
 df_c$Study.Country <- gsub('Micronesia,Federated States of','Micronesia, Federated States of',df_c$Study.Country)
@@ -114,8 +115,6 @@ df2$Mapping_Country <- gsub('Wake Atoll','United States Minor Outlying Islands',
 df2$Mapping_Country <- gsub('Swaziland','Eswatini',df2$Mapping_Country)
 df2$Mapping_Country <- gsub('Palmyra','United States Minor Outlying Islands',df2$Mapping_Country)
 df2$Mapping_Country <- gsub('Chagos Archipelago','British Indian Ocean Territory',df2$Mapping_Country)
-df2$Mapping_Country <- gsub('Saba','Bonaire, Sint Eustatius, Saba',df2$Mapping_Country)
-df2$Mapping_Country <- gsub('Bonaire','Bonaire, Sint Eustatius, Saba',df2$Mapping_Country)
 df2$Mapping_Country <- gsub('Scotland','United Kingdom',df2$Mapping_Country)
 df2$Mapping_Country <- gsub('Corsica (France)','France',df2$Mapping_Country)
 df2$Mapping_Country <- gsub('Clipperton Atoll','United Kingdom',df2$Mapping_Country)
@@ -166,6 +165,19 @@ df_a$Mapping_affiliation <- gsub('Tanzania$','Tanzania, United Republic Of',df_a
 df_a$Mapping_affiliation <- gsub('The Netherlands','Netherlands',df_a$Mapping_affiliation)
 df_a$Mapping_affiliation <- gsub('Trinid & Tobago','Trinidad and Tobago',df_a$Mapping_affiliation)
 df_a$Mapping_affiliation <- gsub('UK','United Kingdom',df_a$Mapping_affiliation)
+df_a$Mapping_affiliation <- gsub('Marshall Island$','Marshall Islands',df_a$Mapping_affiliation)
+df_a$Mapping_affiliation <- gsub('Iran$','Iran, Islamic Republic of',df_a$Mapping_affiliation)
+df_a$Mapping_affiliation <- gsub('Micronesia$','Micronesia, Federated States of',df_a$Mapping_affiliation)
+df_a$Mapping_affiliation <- gsub('North Ireland$','United Kingdom',df_a$Mapping_affiliation)
+df_a$Mapping_affiliation <- gsub('Peoples R China','China',df_a$Mapping_affiliation)
+df_a$Mapping_affiliation <- gsub('Russia$','Russian Federation',df_a$Mapping_affiliation)
+df_a$Mapping_affiliation <- gsub('South Korea','Republic of Korea',df_a$Mapping_affiliation)
+df_a$Mapping_affiliation <- gsub('Taiwan$','Taiwan, Province Of China',df_a$Mapping_affiliation)
+df_a$Mapping_affiliation <- gsub('U Arab Emirates','United Arab Emirates',df_a$Mapping_affiliation)
+df_a$Mapping_affiliation <- gsub('US Virgin Islands','United States Virgin Islands',df_a$Mapping_affiliation)
+df_a$Mapping_affiliation <- gsub('Vietnam','Viet Nam',df_a$Mapping_affiliation)
+df_a$Mapping_affiliation <- gsub('Wales','United Kingdom',df_a$Mapping_affiliation)
+df_a$Mapping_affiliation <- gsub('Palikir Pohnpei FSM','Micronesia, Federated States of',df_a$Mapping_affiliation)
 
 df_a <- df_a %>% select(Article.ID,Author_order,Mapping_affiliation) %>% distinct()
 df2 <- left_join(df2,df_a,by=c("Article.ID","Author_order"))
@@ -241,4 +253,5 @@ df2$Journal <- gsub("PLoS One","PLOS ONE",df2$Journal)
 
 ##Assign regions
 
-saveRDS(df2,file="final_data_for_analysis_02282020.rds")
+saveRDS(df2,file="final_data_for_analysis_03022020.rds")
+

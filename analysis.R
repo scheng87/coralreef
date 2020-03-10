@@ -17,9 +17,10 @@ library(scales)
 library(cowplot)
 library(forcats)
 library(ggpubr)
+library(geosphere)
 
 #Read in data
-df2 <- readRDS("final_data_for_analysis_01312020.rds")
+df2 <- readRDS("final_data_for_analysis_03022020.rds")
 
 ##Summary statistics
 n <- n_distinct(df2$Article.ID)
@@ -45,8 +46,8 @@ plot(gg)
 ##Geographical distribution of study countries
 ##Plot countries
 #load in full country list
-country <- read.csv("country_code_web.csv", head=TRUE, sep=",")
-names(country) <- c("Study_country", "Code","Territory","Sovereignty")
+country <- read.csv("country_code_web.csv", head=TRUE, sep=",",stringsAsFactors = FALSE)
+names(country) <- c("Study_country", "Code","Territory","Sovereignty","Latitude","Longitude","Reef_area","Region","Income")
 country$Study_country <- as.character(country$Study_country)
 
 ##Count number of studies for all countries and arrange by region
@@ -714,6 +715,127 @@ ggplot(dac, aes(First_last,n)) +
 
 #For each country, where are all authors from
 
+kk <- df2 %>% select(Article.ID,Author,Mapping_affiliation,Mapping_Country,Study_region) %>% distinct()
+kk_non <- kk %>% filter(is.na(Mapping_Country))
+kk2 <- kk %>% filter(!is.na(Mapping_Country)) %>% filter(!is.na(Mapping_affiliation)) %>% select(-Author) %>% count(Mapping_affiliation,Mapping_Country)
+
+kk2 <- kk2 %>% left_join()
+#Checking typos and format
+# l <- full_join(kk2,country,by=c("Mapping_Country" = "Study_country")) %>% filter(is.na(Latitude))
+# k <- full_join(kk2,country,by=c("Mapping_affiliation"="Study_country")) %>% filter(is.na(Latitude))
+
+#map("world",col='#1A1A1A',fill=TRUE,bg="black",lwd=0.001)
+
+#pal <- colorRampPalette(c("#333333","white","#1292db"))
+#colors <- pal(100)
+
+# Download NASA night lights image
+download.file("https://www.nasa.gov/specials/blackmarble/2016/globalmaps/BlackMarble_2016_01deg.jpg", 
+              destfile = "BlackMarble_2016_01deg.jpg", mode = "wb")
+# Load picture and render
+earth <- readJPEG("BlackMarble_2016_01deg.jpg", native = TRUE)
+earth <- rasterGrob(earth, interpolate = TRUE)
+
+#Summarize dataset
+kk2_sub <-kk2[order(kk2$n),]
+max <- max(kk2_sub$n)
+
+#Take subset of country data
+coord <- select(country,Study_country,Latitude,Longitude,Region)
+
+#Connect latitude and longitudes
+data_plot <- kk2_sub %>% left_join(coord,by=c("Mapping_affiliation"="Study_country"))
+colnames(data_plot) <- c("Mapping_affiliation","Mapping_Country","n","homelat","homelon","homecontinent")
+data_plot <- data_plot %>% left_join(coord,by=c("Mapping_Country"="Study_country"))
+colnames(data_plot) <- c("Mapping_affiliation","Mapping_Country","n","homelat","homelon","homecontinent","travellat","travellon","travelcontinent")
+
+#Create two dataframes - 1) for different affil/study locations and one for the same
+foreign=as.data.frame(matrix(nrow=1,ncol=9))
+colnames(foreign) <- c("Mapping_affiliation","Mapping_Country","n","homelat","homelon","homecontinent","travellat","travellon","travelcontinent")
+domestic=as.data.frame(matrix(nrow=1,ncol=9))
+colnames(domestic) <- c("Mapping_affiliation","Mapping_Country","n","homelat","homelon","homecontinent","travellat","travellon","travelcontinent")
+
+for(i in c(1:nrow(data_plot))){
+  if(data_plot$Mapping_affiliation[i] == data_plot$Mapping_Country[i]){
+    tmp <- as.data.frame(data_plot[i,])
+    domestic <- bind_rows(domestic, tmp)
+  } else if(data_plot$Mapping_affiliation[i] != data_plot$Mapping_Country[i]){
+    tmp <- as.data.frame(data_plot[i,])
+    foreign <- bind_rows(foreign,tmp)
+  }
+}
+
+summary <- foreign %>% select(-Mapping_affiliation,-Mapping_Country)
+summary <- arrange(summary,n)
+summary <- summary[c(2,3,4,5,6,7,1)]
+summary <- summary %>% filter(!is.na(homelon))
+
+domestic <- domestic %>% select(-Mapping_affiliation,-Mapping_Country)
+domestic <- arrange(domestic,desc(n))
+domestic <- domestic %>% filter(!is.na(homelon))
+
+# A function that makes a dateframe per connection (we will use these connections to plot each lines)
+data_for_connection=function( dep_lon, dep_lat, arr_lon, arr_lat, group){
+  inter <- gcIntermediate(c(dep_lon, dep_lat), c(arr_lon, arr_lat), n=50, addStartEnd=TRUE, breakAtDateLine=F)             
+  inter=data.frame(inter)
+  inter$group=NA
+  diff_of_lon=abs(dep_lon) + abs(arr_lon)
+  if(diff_of_lon > 180){
+    inter$group[ which(inter$lon>=0)]=paste(group, "A",sep="")
+    inter$group[ which(inter$lon<0)]=paste(group, "B",sep="")
+  }else{
+    inter$group=as.character(paste(group))
+  }
+  return(inter)
+}
+
+# Complete dataframe for plotting
+data_ready_plot=data.frame()
+for(i in c(1:nrow(summary))){
+  tmp=data_for_connection(summary$homelon[i], summary$homelat[i], summary$travellon[i], summary$travellat[i], i)
+  tmp$homecontinent=summary$homecontinent[i]
+  tmp$n=summary$n[i]
+  data_ready_plot=bind_rows(data_ready_plot, tmp)
+}
+data_ready_plot$homecontinent=factor(data_ready_plot$homecontinent, levels=c("East Asia and Pacific","Europe and Central Asia","Latin America and the Caribbean","Middle East and North Africa","North America","South Asia","Sub-Saharan Africa"))
+
+# Plot
+
+worldmap <- map_data ("world")
+
+mybreaks <- c(1,10,50,100,500,1500)
+p <- ggplot(worldmap) +
+  geom_map(data=worldmap,map=worldmap,aes(x=long,y=lat,map_id=region),col="gray25",fill="black") +
+  #annotation_custom(earth, xmin = -180, xmax = 180, ymin = -90, ymax = 90) +
+  geom_line(data=data_ready_plot, aes(x=lon, y=lat, group=group, colour=homecontinent, alpha=n), size=0.7) +
+  geom_point(data=domestic,aes(x=homelon,y=homelat,size=n,colour=homecontinent),alpha=0.6) +
+  scale_size_continuous(name="Number of authors working in own country",range=c(1,12),breaks=mybreaks) +
+  scale_color_brewer(palette="Accent") +
+  theme_void() +
+  labs(color="Affiliation of researcher",alpha="Number of authors working in another country") +
+  theme(
+    panel.background=element_rect(fill="black","colour"="black"),
+    legend.text = element_text(color="black",size=17),
+    legend.margin=margin(0.2,0.2,0.2,0.2,"cm"),
+    legend.position="bottom",
+    legend.direction="horizontal",
+    legend.background=element_rect(fill="white",linetype="solid",color="gray25"),
+    legend.title=element_text(color="black",size=20,face="bold"),
+    legend.justification="center"
+    #panel.background = element_rect(fill = "black", colour = "black"), 
+    #panel.spacing=unit(c(0,0,0,0), "null"),
+    #plot.margin=grid::unit(c(0,0,0,0), "cm"),
+  ) +
+  guides(linetype = guide_legend(override.aes = list(size = 2))) +
+  ggplot2::annotate("text", x = -175, y = 80, hjust = 0, size = 11, label = paste("Where coral reef scientists do research"), color = "white") +
+  ggplot2::annotate("text", x = -175, y = 70, hjust = 0, size = 8, label = paste("Each line represents the contribution of authors from one country to research in another | Increasingly opaque lines represent higher numbers of authors"), color = "white", alpha = 0.5) +
+  xlim(-180,180) +
+  ylim(-60,80) +
+  scale_x_continuous(expand = c(0.006, 0.006)) +
+  coord_equal() 
+
+# Save at PNG
+ggsave("WherePeopleDoResearch.png", width = 36, height = 15.22, units = "in", dpi = 90)
 #For territories, what proportion of authors are from the territory vs. the sovereign nation?
 
 

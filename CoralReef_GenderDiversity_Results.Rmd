@@ -39,7 +39,7 @@ The goal of this project is to examine patterns in author diversity (gender/geog
 </span>
 
 ```{r data, include=FALSE}
-df2 <- readRDS("final_data_for_analysis_02282020.rds")
+df2 <- readRDS("final_data_for_analysis_03022020.rds")
 
 ##Remove 2019
 df2 <- df2 %>% filter(Pub_year != 2019)
