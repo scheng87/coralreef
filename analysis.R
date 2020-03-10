@@ -772,6 +772,7 @@ summary <- summary %>% filter(!is.na(homelon))
 
 domestic <- domestic %>% select(-Mapping_affiliation,-Mapping_Country)
 domestic <- arrange(domestic,desc(n))
+domestic <- domestic[c(2,3,4,5,6,7,1)]
 domestic <- domestic %>% filter(!is.na(homelon))
 
 # A function that makes a dateframe per connection (we will use these connections to plot each lines)
@@ -798,18 +799,21 @@ for(i in c(1:nrow(summary))){
   data_ready_plot=bind_rows(data_ready_plot, tmp)
 }
 data_ready_plot$homecontinent=factor(data_ready_plot$homecontinent, levels=c("East Asia and Pacific","Europe and Central Asia","Latin America and the Caribbean","Middle East and North Africa","North America","South Asia","Sub-Saharan Africa"))
+#data_ready_plot$homecontinent=factor(data_ready_plot$homecontinent, levels=c("Low-Income","Lower-Middle Income","Upper-Middle Income","High-Income","Not categorized"))
 
 # Plot
 
 worldmap <- map_data ("world")
 
 mybreaks <- c(1,10,50,100,500,1500)
+mybreaks2 <- c(1,50,150)
 p <- ggplot(worldmap) +
   geom_map(data=worldmap,map=worldmap,aes(x=long,y=lat,map_id=region),col="gray25",fill="black") +
   #annotation_custom(earth, xmin = -180, xmax = 180, ymin = -90, ymax = 90) +
   geom_line(data=data_ready_plot, aes(x=lon, y=lat, group=group, colour=homecontinent, alpha=n), size=0.7) +
   geom_point(data=domestic,aes(x=homelon,y=homelat,size=n,colour=homecontinent),alpha=0.6) +
   scale_size_continuous(name="Number of authors working in own country",range=c(1,12),breaks=mybreaks) +
+  scale_alpha_continuous(name="Number of authors working in another country",range=c(0.2,1),breaks=mybreaks2) +
   scale_color_brewer(palette="Accent") +
   theme_void() +
   labs(color="Affiliation of researcher",alpha="Number of authors working in another country") +
@@ -835,7 +839,9 @@ p <- ggplot(worldmap) +
   coord_equal() 
 
 # Save at PNG
-ggsave("WherePeopleDoResearch.png", width = 36, height = 15.22, units = "in", dpi = 90)
+ggsave("WherePeopleDoResearch_byRegion.png", width = 36, height = 15.22, units = "in", dpi = 90)
+
+#Version two with income
 #For territories, what proportion of authors are from the territory vs. the sovereign nation?
 
 
