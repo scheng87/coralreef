@@ -641,13 +641,14 @@ sankeyNetwork(Links = s1, Nodes = nodes1,
 ##Using degree centrality and betweeness centrality to examine autonomy and influence of authors
 
 ##Reshape data into rows of papers and columns of authors
-net_df <- df2 %>% select(Article.ID,Author,Mapping_affiliation,Author_order) %>% distinct()
+net_df <- df2 %>% select(Article.ID,Author,Mapping_affiliation,Author_order,Pub_year) %>% distinct()
 gsgn <- country %>% select(Study_country,Global)
 net_df <- net_df %>% left_join(gsgn, by=c("Mapping_affiliation" = "Study_country"))
 
 net_df <- arrange(net_df,Article.ID,Author_order)
 f <- net_df %>% filter(Author_order == 1)
 ff <- net_df %>% filter(Article.ID %in% f$Article.ID)
+ff <- ff %>% filter(Pub_year == 2003) ##change for each year
 
 ##Create edge list
 edge <- select(ff, Article.ID,Author,Author_order) %>% distinct() %>% arrange(Article.ID)
@@ -690,7 +691,7 @@ my_color <- coul[as.numeric(as.factor(V(network)$carac))]
 l <- layout.kamada.kawai(network) #explain different graph layouts
 
 # Make the plot
-pdf("conetwork_geo_2003.pdf",height=20,width=30)
+pdf("conetwork_geo_2003.pdf",height=20,width=30) ## change for each year
 
 V(network)$size <- 15*(degree(network, mode="in")/ max(degree(network, mode="in")))
 plot(network, vertex.color=my_color, layout=l, vertex.label=NA,edge.color='gray')
