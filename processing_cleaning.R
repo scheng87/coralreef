@@ -19,7 +19,7 @@ library(forcats)
 library(ggpubr)
 
 ##  Preparing dataset
-data <- read.csv("coralreef_gender_cleaned_final_2020.csv",header=TRUE)
+data <- read.csv("coralreef_gender_cleaned_final_dec2020_authornames.csv",header=TRUE)
 data <- data %>% filter(is.na(Excluded)) %>% distinct()
 data <- filter(data,!is.na(Pub_year))
 data$Journal <- as.character(data$Journal)
@@ -118,25 +118,26 @@ df2$Mapping_Country <- gsub('Chagos Archipelago','British Indian Ocean Territory
 df2$Mapping_Country <- gsub('Scotland','United Kingdom',df2$Mapping_Country)
 df2$Mapping_Country <- gsub('Corsica (France)','France',df2$Mapping_Country)
 df2$Mapping_Country <- gsub('Clipperton Atoll','United Kingdom',df2$Mapping_Country)
+df2$Mapping_Country <- gsub('Clipperton Atoll','United Kingdom',df2$Mapping_Country)
 
 #Fixing study_type syntax
-df_s <- select(df2, Article.ID, Laboratory) %>% distinct()
-df_s <- df_s %>% filter(!is.na(Laboratory)) %>% distinct()
+df_s <- select(df2, Article.ID, Study_type) %>% distinct()
+df_s <- df_s %>% filter(!is.na(Study_type)) %>% distinct()
 
 #Fix syntax and delimiter between countries, fixing mispellings and typos
-df_s$Laboratory <- gsub(', ',',',df_s$Laboratory)
-df_s$Laboratory <- gsub(',',';',df_s$Laboratory)
-df_s$Laboratory <- gsub('; ',';',df_s$Laboratory)
-df_s$Laboratory <- gsub('; ',';',df_s$Laboratory)
-df_s$Laboratory <- gsub('Desk Studies','Desk studies',df_s$Laboratory)
-df_s$Laboratory <- gsub('Field-based;Synthesis Modelling','Field-based;Synthesis;Modelling',df_s$Laboratory)
-df_s$Laboratory <- gsub('Modeling','Modelling',df_s$Laboratory)
-df_s$Laboratory[df_s$Laboratory == "Correspondence"] <- c("Editorials/Correspondence")
-df_s$Laboratory[df_s$Laboratory == "Editorials"] <- c("Editorials/Correspondence")
-df_s$Laboratory[df_s$Laboratory == ""] <- c("Undetermined")
+df_s$Study_type <- gsub(', ',',',df_s$Study_type)
+df_s$Study_type <- gsub(',',';',df_s$Study_type)
+df_s$Study_type <- gsub('; ',';',df_s$Study_type)
+df_s$Study_type <- gsub('; ',';',df_s$Study_type)
+df_s$Study_type <- gsub('Desk Studies','Desk studies',df_s$Study_type)
+df_s$Study_type <- gsub('Field-based;Synthesis Modelling','Field-based;Synthesis;Modelling',df_s$Study_type)
+df_s$Study_type <- gsub('Modeling','Modelling',df_s$Study_type)
+df_s$Study_type[df_s$Study_type == "Correspondence"] <- c("Editorials/Correspondence")
+df_s$Study_type[df_s$Study_type == "Editorials"] <- c("Editorials/Correspondence")
+df_s$Study_type[df_s$Study_type == ""] <- c("Undetermined")
 
 #Splitting countries out onto separate lines
-s <- strsplit(df_s$Laboratory, split=";")
+s <- strsplit(df_s$Study_type, split=";")
 dataframe_s <- data.frame(ID=rep(df_s$Article.ID, sapply(s, length)), Study_Type = unlist(s))
 colnames(dataframe_s) <- c("Article.ID","Study_Type")
 dataframe_s <- distinct(dataframe_s)
@@ -144,7 +145,7 @@ dataframe_s <- distinct(dataframe_s)
 #Add new column to dataframe
 df2 <- left_join(df2,dataframe_s,by="Article.ID") 
 
-colnames(df2) <- c("Done","Excluded","Reviewer","Article.ID","Author","Author_gender","Country_affiliation","Title","Keywords","Abstract","Study.Country","Territory.disputed","Study_region","Study_type","Marine_realm","Author.Based.In.Country","Author.Based.In.Sovereign","Times.Cited","DOI","Affiliation","Journal","Author_order","Pub_year","First_last","Study_Country","Mapping_Country","Study_Type")
+colnames(df2) <- c("Done","Excluded","Reviewer","Article.ID","Author","Author_raw","Author_gender","Country_affiliation","Title","Keywords","Abstract","Study.Country","Territory.disputed","Study_region","Study_type","Marine_realm","Author.Based.In.Country","Author.Based.In.Sovereign","Times.Cited","DOI","Affiliation","Journal","Author_order","Pub_year","First_last","Study_Country","Mapping_Country","Study_Type")
 
 ##Clean affiliation data into new column
 df_a <- df2 %>% select(Article.ID,Author_order,Author,Country_affiliation) %>% distinct()
@@ -176,6 +177,7 @@ df_a$Mapping_affiliation <- gsub('Taiwan$','Taiwan, Province Of China',df_a$Mapp
 df_a$Mapping_affiliation <- gsub('U Arab Emirates','United Arab Emirates',df_a$Mapping_affiliation)
 df_a$Mapping_affiliation <- gsub('US Virgin Islands','United States Virgin Islands',df_a$Mapping_affiliation)
 df_a$Mapping_affiliation <- gsub('Vietnam','Viet Nam',df_a$Mapping_affiliation)
+df_a$Mapping_affiliation <- gsub('Venezuela','Venezuela (Bolivarian Republic of)',df_a$Mapping_affiliation)
 df_a$Mapping_affiliation <- gsub('Wales','United Kingdom',df_a$Mapping_affiliation)
 df_a$Mapping_affiliation <- gsub('Palikir Pohnpei FSM','Micronesia, Federated States of',df_a$Mapping_affiliation)
 
@@ -251,7 +253,7 @@ df2 <- left_join(df2,divprop,by=c("Article.ID","Author_order")) %>% distinct()
 df2$Journal <- gsub("Plos One","PLOS ONE",df2$Journal)
 df2$Journal <- gsub("PLoS One","PLOS ONE",df2$Journal)
 
-##Assign regions
 
-saveRDS(df2,file="final_data_for_analysis_03022020.rds")
+
+saveRDS(df2,file="final_data_for_analysis_12172020.rds")
 

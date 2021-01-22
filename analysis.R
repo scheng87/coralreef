@@ -18,16 +18,35 @@ library(cowplot)
 library(forcats)
 library(ggpubr)
 library(geosphere)
+library(reshape)
+library(igraph)
+
+Matrix2Edge <- function(x){
+  final <- data.frame("a"=character(),"b"=character()) #an empty dataframe to add the edge list to
+  
+  for (i in 1:(ncol(x)-1)){
+    id = paste("V", i, sep="")
+    edge_list <- melt(x, id = (id))
+    x[id] <- NULL
+    keeps <- c(id, "value")
+    edge_list <- edge_list[keeps]
+    colnames(edge_list) <- colnames(final)
+    final <- rbind(final,edge_list)
+  }
+  final <- final[!(final$b=="" | final$b==" "),]
+  return(final)
+}
 
 #Read in data
-df2 <- readRDS("final_data_for_analysis_03022020.rds")
+df2 <- readRDS("final_data_for_analysis_11302020.rds")
+df2 <- filter(df2, Pub_year != 2019)
 
 ##Summary statistics
 n <- n_distinct(df2$Article.ID)
 j <- unique(df2$Journal)
 y <- c(min(df2$Pub_year):max(df2$Pub_year))
 a <- unique(df2$Author)
-c <- unique(df2$Country_affiliation)
+c <- unique(df2$Mapping_affiliation)
 
 ##Growth in publications
 growth <- df2 %>% select(Article.ID,Pub_year) %>% distinct()
@@ -35,7 +54,7 @@ g <- count(growth,Pub_year)
 
 gg <- ggplot(g, aes(Pub_year,n)) + 
   geom_col(fill="steelblue") +
-  scale_x_continuous(breaks=seq(2003,2019,1), name="Publication year") +
+  scale_x_continuous(breaks=seq(2003,2018,1), name="Publication year") +
   scale_y_continuous(breaks=seq(0,200,50), name="Number of articles") +
   theme(
     axis.text.x=element_text(angle=45,hjust=1)
@@ -47,7 +66,7 @@ plot(gg)
 ##Plot countries
 #load in full country list
 country <- read.csv("country_code_web.csv", head=TRUE, sep=",",stringsAsFactors = FALSE)
-names(country) <- c("Study_country", "Code","Territory","Sovereignty","Latitude","Longitude","Reef_area","Region","Income")
+names(country) <- c("Study_country", "Code","Territory","Sovereignty","Latitude","Longitude","Reef_area","Region","Income","Global")
 country$Study_country <- as.character(country$Study_country)
 
 ##Count number of studies for all countries and arrange by region
@@ -126,6 +145,7 @@ cd <- cc +
       )
     )
 
+pdf()
 plot(cd)
 
 #scale_fill_gradient2(low="#deebf7",mid="#9ecae1",high="#08519c",midpoint=(max(countries$counts)/2),limits=c(0,max(countries$counts)))
@@ -222,7 +242,7 @@ wordcloud(words = wc$word, freq = wc$freq, min.freq = 10,
 
 ##Overall gender composition in author pool
 #Percent authors successfully identified
-authors <- gender %>% select(Author_gender,Author) %>% distinct()
+authors <- df2 %>% select(Author_gender,Author) %>% distinct()
 n_a <- n_distinct(authors$Author)
 gender_stats <- count(authors,Author_gender)
 gs_plot <- filter(gender_stats,Author_gender != "Not found")
@@ -250,7 +270,7 @@ plot(gs)
 ##Gender analysis
 
 #Percent first and last authors and other position, male vs. female vs. other
-ratio <- gender %>% select(Article.ID,Author_gender,First_last) %>% distinct()
+ratio <- df2 %>% select(Article.ID,Author_gender,First_last) %>% distinct()
 x <- n_distinct(ratio$Article.ID)
 rg <- count(ratio,Author_gender,First_last) %>% filter(First_last != "other")
 
@@ -283,7 +303,7 @@ gcy <- count(gc_year,Pub_year,Author_gender,First_last)
 ggplot(gcy, aes(Pub_year,n)) + 
   geom_col(aes(fill=Author_gender),position=position_dodge()) +
   facet_grid(rows=vars(First_last), scales="free") +
-  scale_x_continuous(breaks=seq(2003,2019,1), name="Publication year") +
+  scale_x_continuous(breaks=seq(2003,2018,1), name="Publication year") +
   ylab("Number of articles") +
   theme(
     axis.text.x=element_text(angle=45,hjust=1),
@@ -301,14 +321,14 @@ ggplot(gcy, aes(Pub_year,n)) +
          ))
 
 ggplot(gpy, aes(Year,x)) + 
-  geom_col(aes(fill=Gender),position=position_dodge()) +
-  scale_x_continuous(breaks=seq(2003,2019,1), name="Publication year") +
-  scale_y_continuous(breaks=seq(0,120,10), name="Proportion of published articles") +
+  geom_col(aes(fill=Gender),position="fill") +
+  scale_x_continuous(breaks=seq(2003,2018,1), name="Publication year") +
   theme(
     axis.text.x=element_text(angle=45,hjust=1)
   ) +
   theme(
     legend.position='bottom') +
+  ylab("Percent of published articles") +
   scale_fill_brewer(palette = "Accent") +
   guides(fill=guide_legend(title="Gender"),
          guide=guide_legend(
@@ -841,8 +861,156 @@ p <- ggplot(worldmap) +
 # Save at PNG
 ggsave("WherePeopleDoResearch_byRegion.png", width = 36, height = 15.22, units = "in", dpi = 90)
 
-#Version two with income
-#For territories, what proportion of authors are from the territory vs. the sovereign nation?
+##Co-author network
+##Using degree centrality and betweeness centrality to examine autonomy and influence of authors
 
+##Reshape data into rows of papers and columns of authors
+net_df <- df2 %>% select(Article.ID,Author,Author_gender,Mapping_affiliation,Author_order) %>% distinct()
 
+f <- net_df %>% filter(Author_gender == 'Female' & Author_order == 1)
+ff <- net_df %>% filter(Article.ID %in% f$Article.ID)
 
+##Create edge list
+edge <- select(ff, Article.ID,Author,Author_order) %>% distinct() %>% arrange(Article.ID)
+e <- spread(edge,Author_order,Author)
+e <- select(e,-Article.ID)
+rownames(e) <- NULL
+
+write.csv(e,"coauthor_network_data_female.csv",row.names=FALSE)
+
+source <- read.csv("coauthor_network_data_female.csv",header=F,stringsAsFactors = F)
+source <- slice(source,-1)
+
+#test <- read.csv("example.csv",sep=";",header=F)
+#test_edge <- Matrix2Edge(test)
+
+edge_list <- Matrix2Edge(source)
+edge_list.cleaned <- filter(edge_list, !is.na(a))
+edge_list.clean <- filter(edge_list.cleaned, !is.na(b))
+
+#Color by gender
+
+colnames(edge_list.cleaned) <- c("source","target")
+nodes <- net_df %>% select(Author,Author_gender) %>% distinct()
+colnames(nodes) <- c("name","carac")
+
+#calculate network - 5282 authors with 7869 edges (connections)
+network <- graph_from_data_frame(d=edge_list.cleaned,vertices=nodes,directed=F)
+
+coul  <- brewer.pal(4, "Set1") 
+
+# Create a vector of color
+my_color <- coul[as.numeric(as.factor(V(network)$carac))]
+
+l <- layout.kamada.kawai(network) #explain differnt graph layouts
+
+# Make the plot
+pdf("full_conetwork_gender_femalefirst.pdf",height=20,width=30)
+
+V(network)$size <- 15*(degree(network, mode="in")/ max(degree(network, mode="in")))
+plot(network, vertex.color=my_color, layout=l, vertex.label=NA,edge.color='gray')
+legend("bottomleft", legend=levels(as.factor(V(network)$carac))  , col = coul , bty = "n", pch=20 , pt.cex = 3, cex = 1.5, text.col=coul , horiz = FALSE, inset = c(0.1, 0.1))
+
+dev.off()
+
+##Calculate node centrality measures
+
+rd.mnet <- degree(network)
+s.mnet <- graph.strength(simplify(network)) # for weighted graph
+
+hist(rd.mnet)
+hist(s.mnet)
+
+#Simplify network - 5282 nodes with 7492 edges
+network2 <- simplify(network)
+l.mnet2 <- layout.kamada.kawai(network2)
+
+l.mnet <- layout.kamada.kawai(network)
+
+#plot
+plot(network, layout=l.mnet, vertex.label=NA, vertex.size=1, vertex.color='blue')
+plot(network2, layout=l.mnet2, vertex.label=NA, vertex.size=1, vertex.color='red')
+
+d.mnet <- degree(network2) 
+
+degree <- d.mnet
+
+dd.mnet <- degree.distribution(network2) # Compute degree distribution d <- 1:max(d.mnet)-1 ind <- (dd.mnet != 0) a.nn.deg.mnet <- graph.knn(mnet2, V(mnet2))
+
+mean(d.mnet)
+###APPROACH 2
+
+graph=graph.edgelist(as.matrix(edge_list.cleaned),directed=FALSE)
+
+graph.density(graph)
+
+degrees <- data.frame(degree = igraph::degree(graph),
+                      in_degree = igraph::degree(graph, mode = c("in"), loops = FALSE, normalized = FALSE),
+                      out_degree = igraph::degree(graph, mode = c("out"), loops = FALSE, normalized = FALSE),
+                      btwn= betweenness(graph, directed = T),
+                      close = closeness(graph, mode = c("all")),
+                      eigen <- evcent(graph)
+)
+
+#cleaning up the table
+degrees = degrees[,c(1:6)]
+#include this in markdown
+degrees_sorted <- degrees[order(-degrees$degree),] 
+write.csv(degrees_sorted, file = "degrees_sorted.csv")
+
+library(gridExtra)
+pdf("degrees_sorted.pdf", height=15, width=15)
+grid.table(degrees_sorted)
+dev.off()
+
+cor(degrees_sorted)
+
+set.seed(12)
+
+l <- layout_sphere(graph) #explain differnt graph layouts
+
+# Size of node by in-degree.
+V(graph)$size <- 15*(degree(graph, mode="in")/ max(degree(graph, mode="in")))
+
+# Size of node label by in-degree.
+V(graph)$label.cex <- ((betweenness(graph, directed = T)+1)/(max(betweenness(graph, directed = T))+1))*2
+
+# plot the graph
+pdf("network_femalefirst.pdf",height=20,width=20)
+
+plot(graph, layout=l, edge.arrow.size=.1, edge.curved=F, edge.color="grey")
+
+dev.off()
+
+#title("Co-Authorship Graph",cex.main=0.8,col.main="black")
+
+### B.3. Community detection ----
+fgn = edge.betweenness.community (graph, directed = TRUE, edge.betweenness = TRUE, merges = TRUE,
+                                  bridges = TRUE, modularity = TRUE, membership = TRUE)  ## run Girvan-Newman partitioning
+
+plot(fgn, graph, layout=l, edge.arrow.size=.2, edge.curved=T, edge.color="grey")  ## plot G-N partitioning
+
+fwt <- walktrap.community(graph, steps=200,modularity=TRUE) # , labels=TRUE)  ## run random walk partitioning
+
+plot(fwt, graph, layout=l, edge.arrow.size=.2, edge.curved=T, edge.color="grey")  ## plot R-W partitioning
+
+flp = label.propagation.community(graph)  ## run label propogation partitioning
+
+plot(flp, graph, layout=l, edge.arrow.size=.2, edge.curved=T, edge.color="grey")  ## plot L-P partitioning
+
+#comparing different community dittection algorithms
+compare(fgn, fwt, method= c("nmi"))
+compare(fgn, fwt, method= c("rand"))
+compare(fgn, fwt, method= c("adjusted.rand"))
+
+compare(fgn, flp, method= c("nmi"))
+compare(fgn, fwt, method= c("rand"))
+compare(fgn, flp, method= c("adjusted.rand"))
+
+## get the results in a dataframe
+
+girvan = data.frame(fgn$membership)
+rw = data.frame(fwt$membership)
+flpm = data.frame(flp$membership)
+
+degrees <- cbind(degrees, girvan, rw, flpm)

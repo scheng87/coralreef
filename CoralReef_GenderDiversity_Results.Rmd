@@ -40,7 +40,7 @@ The goal of this project is to examine patterns in author diversity (gender/geog
 </span>
 
 ```{r data, include=FALSE}
-df2 <- readRDS("final_data_for_analysis_03022020.rds")
+df2 <- readRDS("final_data_for_analysis_10282020.rds")
 
 ##Remove 2019
 df2 <- df2 %>% filter(Pub_year != 2019)
@@ -80,7 +80,7 @@ n <- n_distinct(df2$Article.ID)
 j <- unique(df2$Journal)
 y <- c(min(df2$Pub_year):max(df2$Pub_year))
 a <- unique(df2$Author)
-c <- unique(df2$Country_affiliation)
+c <- unique(df2$Mapping_affiliation)
 ```
 This study considered ``r n`` unique studies published between ``r y[1]`` and ``r y[16]``.
 This dataset represents works by ``r length(a)`` authors from ``r length(c)`` different countries. <span style="color: purple;">**The number of unique authors is going to be wrong as names were not standardized between databases). We need to decide whether we want to spend time cleaning this or not. Variations include Last,First; First Last; Last, First Initial**</span>
