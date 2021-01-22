@@ -1,0 +1,97 @@
+---
+title: "Carbon footprint setup"
+author: "Emily Darling"
+date: "02/10/2020"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+
+library(here)
+library(tidyverse)
+library(janitor)
+library(data.table)
+
+```
+
+# Load data and export a raw copy
+
+First, we load the data prepared by Sam Cheng et al. from an RDS file. And make a distinct dataset with one row per study, affiliation country and study country
+
+Filter to only first author
+
+* Check with Sam if there's a more recent version of the data? 
+
+```{r load-data}
+
+#data in folder
+df2 <- readRDS(here("final_data_for_analysis_01302020.rds")) %>% 
+  as_tibble() %>% 
+  clean_names()
+
+df2
+names(df2)
+
+#choose only first author
+df2 %>% 
+  tabyl(first_last)
+
+#choose only field studies
+df2 %>% 
+  tabyl(study_type_2)
+
+#make dataset for carbon footprint analysis
+#
+data <- df2 %>% 
+  filter(first_last == "first" & 
+           study_type_2 == "Field-based") %>% 
+  select(article_id, 
+         title, 
+         journal, 
+         pub_year, 
+         keywords, 
+         abstract,
+         #study_region, #NAs
+         marine_realm, 
+         times_cited, 
+         doi, 
+         study_type_2, 
+         affiliation, 
+         mapping_affiliation, 
+         mapping_country) %>% 
+  distinct()
+
+#let's take only the most recent year to start (2018)
+data %>% 
+  filter(pub_year == 2018) %>% 
+  fwrite(here("Carbon footprint", "data", 
+              "2018-raw-data-from-Sam-01302020.csv"))
+
+```
+
+# Make country pairs 
+
+How many country pairs are we talking about?
+
+Pairs may be the same,eg., UK > Barbados and Barbados > UK
+
+```{r country-pairs}
+data %>% 
+  filter(pub_year == 2018) %>% 
+  select(contains("mapping")) %>% 
+  distinct() %>% 
+  na.omit() %>% 
+  arrange(mapping_affiliation, 
+          mapping_country)
+
+.Last.value %>% 
+  view()
+  
+  
+```
+
+
+
