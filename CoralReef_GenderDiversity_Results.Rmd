@@ -29,6 +29,7 @@ library(cowplot)
 library(forcats)
 library(ggpubr)
 library(geosphere)
+library(here)
 ```
 
 ## Introduction
@@ -40,7 +41,11 @@ The goal of this project is to examine patterns in author diversity (gender/geog
 </span>
 
 ```{r data, include=FALSE}
+<<<<<<< HEAD
+df2 <- readRDS(here("final_data_for_analysis_03022020.rds"))
+=======
 df2 <- readRDS("final_data_for_analysis_10282020.rds")
+>>>>>>> d80b8676ec0b0dd450220bb4140ae618f0ace889
 
 ##Remove 2019
 df2 <- df2 %>% filter(Pub_year != 2019)
