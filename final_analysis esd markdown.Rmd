@@ -1,0 +1,176 @@
+---
+title: "Reef diversity figures"
+author: "E. Darling adapted from S. Cheng"
+date: "30/01/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+install.packages("janitor")
+
+library(here)
+library(tidyverse)
+library(janitor)
+library(RColorBrewer)
+library(maptools)
+library(rgdal)
+library(mapproj)
+library(viridis)
+library(scales)
+library(cowplot)
+library(forcats)
+library(ggpubr)
+library(geosphere)
+library(igraph)
+library(networkD3)
+
+
+```
+
+#Load data
+
+```{r load-data}
+
+#Read in data
+df2 <- readRDS(here("final_data_for_analysis_12172020.rds")) %>% 
+  clean_names() %>% 
+  filter(pub_year != 2019)
+
+df2
+
+
+#load in full country list
+country <- read_csv(here("country_code_web.csv")) %>% 
+  clean_names()
+
+country
+```
+
+
+#Section 1 - description
+
+```{r section-1}
+names(df2)
+
+## SECTION 1 - Summary/overview
+# n <- n_distinct(df2$article_id)
+# j <- unique(df2$Journal)
+# y <- c(min(df2$Pub_year):max(df2$Pub_year))
+# a <- unique(df2$Author)
+# c <- unique(df2$Mapping_affiliation)
+
+#Percent authors successfully identified
+df2 %>% 
+  select(author_gender,
+         author) %>% 
+  distinct()
+
+n_distinct(df2$author)
+
+df2 %>% 
+  tabyl(author_gender)
+
+#gs_plot <- filter(gender_stats,Author_gender != "Not found")
+
+#Checking where undetermined authors are from (potential country bias)
+df2 %>% 
+  filter(!author_gender %in% c("Female", "Male")) %>% 
+  #tabyl(author_gender) %>% 
+  select(article_id,
+         author_gender,
+         mapping_affiliation) %>% 
+  distinct() %>%
+  tabyl(mapping_affiliation) %>% 
+  arrange(-n)
+  
+
+#Affiliations
+df2 %>% 
+  select(author,
+         mapping_affiliation) %>%
+  distinct() %>% 
+  tabyl(mapping_affiliation) %>% 
+  arrange(-n) %>% 
+  filter(n> 130)
+
+#Types of studies
+df2 %>% 
+  select(article_id,
+         study_type) %>% 
+  distinct() %>% 
+  mutate(study_type = str_replace_all(study_type, " ", ""),
+         study_type = str_replace_all(study_type, ",", ";"),
+         study_type = str_replace_all(study_type, "SynthesisModelling", "Synthesis;Modelling"),
+         study_type = str_replace_all(study_type, "Modeling", "Modelling"), 
+         study_type = na_if(study_type, "")) %>% 
+  #tabyl(study_type)
+  separate(study_type, 
+           sep = ";", 
+           into = c("type1", "type2")) %>% 
+  pivot_longer(-1, 
+               values_drop_na = TRUE) %>% 
+  arrange(article_id) %>% 
+  mutate(value = str_to_lower(value)) %>% 
+  tabyl(value) %>% 
+  arrange(-n)
+
+1068/1677
+
+```
+
+#15-panel coauthor network figure
+
+```{r network-fig, eval = FALSE}
+### FIGURE 7 #####
+##Co-author network
+##Using degree centrality and betweeness centrality to examine autonomy and influence of authors
+
+##Reshape data into rows of papers and columns of authors
+names(df2)
+
+country_to_join <- country %>% 
+  select(country,
+         global)
+
+net_df <- df2 %>% 
+  select(article_id,
+         author,
+         mapping_affiliation,
+         author_order,
+         pub_year) %>% 
+  distinct() %>% 
+  left_join(country_to_join, 
+            by = c("mapping_affiliation" = "country")) %>% 
+  arrange(article_id, 
+          author_order)
+
+
+f <- net_df %>% filter(author_order == 1)
+ff <- net_df %>% filter(article_id %in% f$article_id)
+ff <- ff %>% filter(pub_year == 2003) ##change for each year
+
+
+##STOPPING HERE - NOT SURE HOW SAM"S CODEBASE WORKS
+
+##Create edge list
+author_wide <- ff %>% 
+  select(article_id,
+         author,
+         author_order) %>% 
+  distinct() %>% 
+  arrange(article_id) %>% 
+  pivot_wider(id_cols = 1, 
+              names_from = author_order,
+              values_from = author) %>% 
+  select(-article_id)
+
+author_wide
+
+library(ggnetwork)
+
+```
+
+
+

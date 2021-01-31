@@ -74,6 +74,12 @@ n_distinct(pp$Author)
 st <- df2 %>% select(Article.ID,Study_Type) %>% distinct()
 s.t <- count(st,Study_Type)
 
+##START HERE
+
+
+
+
+
 ##FIGURE 1 - Plotting growth in studies through author contribution from different countries
 qq <- df2 %>% select(Mapping_affiliation,Pub_year)
 q2 <- count(qq,Mapping_affiliation,Pub_year)
